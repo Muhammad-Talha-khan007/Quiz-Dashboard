@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Engineering MCQ Exam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #19A26C;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .quiz-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .info-box {
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .info-box h3 {
+            color: #19A26C;
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .info-box p {
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #19A26C 0%, #148A5A 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .question-number {
+            color: #19A26C;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .option:hover {
+            border-color: #19A26C;
+            background: #f9f9f9;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .option.selected {
+            border-color: #19A26C;
+            background: #f0e6ff;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(147, 51, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .result-container {
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .pass {
+            color: #4caf50;
+        }
+
+        .fail {
+            color: #f44336;
+        }
+
+        .result-status {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 4px solid #19A26C;
+        }
+
+        .stat-card.correct {
+            border-top-color: #4caf50;
+        }
+
+        .stat-card.incorrect {
+            border-top-color: #f44336;
+        }
+
+        .stat-card.passing {
+            border-top-color: #2196f3;
+        }
+
+        .stat-card h4 {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .answer-review {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .answer-review h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .answer-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #e0e0e0;
+            font-size: 13px;
+        }
+
+        .answer-item.correct {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .answer-item.incorrect {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+
+        .answer-item-text {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .answer-item-detail {
+            color: #666;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .start-screen p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .start-screen .rules {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .start-screen .rules h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .start-screen .rules ul {
+            margin-left: 20px;
+        }
+
+        .start-screen .rules li {
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .quiz-info {
+                flex-direction: column;
+            }
+            .info-box {
+                margin: 5px 0;
+            }
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+            .button-group {
+                flex-direction: column;
+            }
+            .question-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="startScreen" class="start-screen">
+            <div class="header">
+                <h1>🤖 AI Prompt Engineering</h1>
+                <p>Master the Art of Communicating with AI</p>
+            </div>
+
+            <h2>Welcome to the Comprehensive Exam!</h2>
+            <p>This is a detailed assessment of your knowledge on AI prompt engineering, context engineering, and advanced prompting techniques.</p>
+
+            <div class="rules">
+                <h3>Exam Details:</h3>
+                <ul>
+                    <li><strong>Total Questions:</strong> 100</li>
+                    <li><strong>Time Limit:</strong> No time limit</li>
+                    <li><strong>Passing Score:</strong> 70% (70/100 correct)</li>
+                    <li><strong>Topics:</strong> Prompt Engineering, Context Engineering, 6-Part Framework, Image Generation, LLM Basics</li>
+                    <li><strong>Difficulty:</strong> Intermediate to Advanced</li>
+                </ul>
+            </div>
+
+            <button class="btn-primary" onclick="startQuiz()" style="width: 200px; margin: 0 auto; display: block;">Start Exam</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizScreen" style="display: none;">
+            <div class="header">
+                <h1>🤖 AI Prompt Engineering Exam</h1>
+            </div>
+
+            <div class="quiz-info">
+                <div class="info-box">
+                    <h3>Question</h3>
+                    <p><span id="currentQuestion">1</span>/100</p>
+                </div>
+                <div class="info-box">
+                    <h3>Answered</h3>
+                    <p id="answeredCount">0</p>
+                </div>
+                <div class="info-box">
+                    <h3>Score</h3>
+                    <p id="scorePreview">0%</p>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="button-group">
+                <button class="btn-secondary" id="prevBtn" onclick="previousQuestion()">Previous</button>
+                <button class="btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultScreen" class="result-container">
+            <div class="result-header">
+                <h2>Exam Results</h2>
+                <div class="score-display" id="scoreDisplay"></div>
+                <div class="result-status" id="resultStatus"></div>
+            </div>
+
+            <div class="result-stats">
+                <div class="stat-card correct">
+                    <h4>Correct Answers</h4>
+                    <p id="correctCount">0</p>
+                </div>
+                <div class="stat-card incorrect">
+                    <h4>Wrong Answers</h4>
+                    <p id="wrongCount">0</p>
+                </div>
+                <div class="stat-card passing">
+                    <h4>Passing Marks</h4>
+                    <p>70%</p>
+                </div>
+            </div>
+
+            <div class="answer-review">
+                <h3>Answer Review</h3>
+                <div id="answerReview"></div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="window.location.href='dashboard-index.html'">📊 Back to Dashboard</button>
+                <button class="btn-primary" onclick="location.reload()">🔄 Retake Exam</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 100 Questions from AI Prompt Engineering
+        const questions = [
+            // Prompt Engineering Basics (Q1-Q20)
+            {
+                id: 1,
+                text: "What is the primary definition of prompt engineering?",
+                options: [
+                    { text: "A) The art of programming AI systems from scratch", correct: false },
+                    { text: "B) The art and science of crafting instructions that guide AI language models to produce desired outputs", correct: true },
+                    { text: "C) The process of testing AI models for bugs", correct: false },
+                    { text: "D) Training large language models on new datasets", correct: false }
+                ],
+                topic: "Prompt Engineering Basics"
+            },
+            {
+                id: 2,
+                text: "According to the tutorial, what percentage of ChatGPT's traffic does it account for among top 10 chatbots?",
+                options: [
+                    { text: "A) 46.59%", correct: false },
+                    { text: "B) 66%", correct: false },
+                    { text: "C) More than 83%", correct: true },
+                    { text: "D) 50%", correct: false }
+                ],
+                topic: "LLM Market Statistics"
+            },
+            {
+                id: 3,
+                text: "What is the difference between prompt engineering and context engineering?",
+                options: [
+                    { text: "A) Prompt engineering crafts instructions; context engineering curates information the model can see", correct: true },
+                    { text: "B) They are the same thing", correct: false },
+                    { text: "C) Context engineering is older than prompt engineering", correct: false },
+                    { text: "D) Prompt engineering is more advanced", correct: false }
+                ],
+                topic: "Engineering Concepts"
+            },
+            {
+                id: 4,
+                text: "What is the analogy used to describe LLMs in context engineering?",
+                options: [
+                    { text: "A) LLM is the GPU, context is the storage", correct: false },
+                    { text: "B) LLM is the CPU, context window is the RAM", correct: true },
+                    { text: "C) LLM is the motherboard, context is the BIOS", correct: false },
+                    { text: "D) LLM is the power supply, context is the load", correct: false }
+                ],
+                topic: "LLM Architecture"
+            },
+            {
+                id: 5,
+                text: "How does an LLM fundamentally work?",
+                options: [
+                    { text: "A) It understands meaning like humans do", correct: false },
+                    { text: "B) It is a sophisticated autocomplete system that predicts the next token", correct: true },
+                    { text: "C) It uses symbolic logic to reason", correct: false },
+                    { text: "D) It searches a database of pre-written responses", correct: false }
+                ],
+                topic: "How LLMs Work"
+            },
+            {
+                id: 6,
+                text: "What is Zero-Shot Prompting?",
+                options: [
+                    { text: "A) Asking a question with no context", correct: false },
+                    { text: "B) Asking directly without examples", correct: true },
+                    { text: "C) Using zero temperature setting", correct: false },
+                    { text: "D) Failing to complete a task", correct: false }
+                ],
+                topic: "Prompting Techniques"
+            },
+            {
+                id: 7,
+                text: "How many examples should be provided in Few-Shot Prompting?",
+                options: [
+                    { text: "A) 1-2 examples", correct: false },
+                    { text: "B) 3-5 examples", correct: true },
+                    { text: "C) 10-15 examples", correct: false },
+                    { text: "D) As many as possible", correct: false }
+                ],
+                topic: "Few-Shot Prompting"
+            },
+            {
+                id: 8,
+                text: "What is the purpose of System Prompting?",
+                options: [
+                    { text: "A) To fix technical errors in the model", correct: false },
+                    { text: "B) To set overall context and behavior guidelines", correct: true },
+                    { text: "C) To increase processing speed", correct: false },
+                    { text: "D) To reduce token usage", correct: false }
+                ],
+                topic: "System Prompts"
+            },
+            {
+                id: 9,
+                text: "What is Chain of Thought (CoT) Prompting used for?",
+                options: [
+                    { text: "A) Organizing conversation history", correct: false },
+                    { text: "B) Encouraging step-by-step reasoning for complex problems", correct: true },
+                    { text: "C) Creating logical chains in code", correct: false },
+                    { text: "D) Linking multiple prompts together", correct: false }
+                ],
+                topic: "Advanced Techniques"
+            },
+            {
+                id: 10,
+                text: "What is Temperature in AI model settings?",
+                options: [
+                    { text: "A) The processing speed of the model", correct: false },
+                    { text: "B) A parameter that controls randomness and creativity (0-1)", correct: true },
+                    { text: "C) The cooling requirement of servers", correct: false },
+                    { text: "D) The maximum number of tokens", correct: false }
+                ],
+                topic: "Configuration Settings"
+            },
+            {
+                id: 11,
+                text: "What temperature setting is best for math problems?",
+                options: [
+                    { text: "A) 0.9", correct: false },
+                    { text: "B) 0.7", correct: false },
+                    { text: "C) 0 (or very low like 0.1-0.3)", correct: true },
+                    { text: "D) 1.0", correct: false }
+                ],
+                topic: "Temperature Settings"
+            },
+            {
+                id: 12,
+                text: "What is Role Prompting?",
+                options: [
+                    { text: "A) Assigning a role to human users", correct: false },
+                    { text: "B) Assigning a specific character or expertise to the AI", correct: true },
+                    { text: "C) Defining roles in a team", correct: false },
+                    { text: "D) Rotating between different prompts", correct: false }
+                ],
+                topic: "Prompting Techniques"
+            },
+            {
+                id: 13,
+                text: "What is Self-Consistency in prompting?",
+                options: [
+                    { text: "A) Ensuring the same output every time", correct: false },
+                    { text: "B) Generating multiple reasoning paths and selecting the most common answer", correct: true },
+                    { text: "C) Using consistent vocabulary", correct: false },
+                    { text: "D) Repeating the same prompt", correct: false }
+                ],
+                topic: "Advanced Techniques"
+            },
+            {
+                id: 14,
+                text: "What is Step-Back Prompting?",
+                options: [
+                    { text: "A) Reversing a previous prompt", correct: false },
+                    { text: "B) Asking a general question first before the specific question", correct: true },
+                    { text: "C) Reducing the length of prompts", correct: false },
+                    { text: "D) Removing unnecessary context", correct: false }
+                ],
+                topic: "Advanced Techniques"
+            },
+            {
+                id: 15,
+                text: "What does ReAct stand for in prompting?",
+                options: [
+                    { text: "A) Rethink and Act", correct: false },
+                    { text: "B) Response and Activate", correct: false },
+                    { text: "C) Reasoning + Acting", correct: true },
+                    { text: "D) Reactive Agent", correct: false }
+                ],
+                topic: "Advanced Techniques"
+            },
+            {
+                id: 16,
+                text: "What is Tree of Thoughts (ToT) best used for?",
+                options: [
+                    { text: "A) Organizing files and folders", correct: false },
+                    { text: "B) Creating visual tree diagrams", correct: false },
+                    { text: "C) Creative problem solving and exploring multiple reasoning branches", correct: true },
+                    { text: "D) Building file systems", correct: false }
+                ],
+                topic: "Advanced Techniques"
+            },
+            {
+                id: 17,
+                text: "What is a common pitfall in prompt engineering?",
+                options: [
+                    { text: "A) Using too many specific details", correct: false },
+                    { text: "B) Providing examples", correct: false },
+                    { text: "C) Ambiguous or vague instructions", correct: true },
+                    { text: "D) Setting low temperature", correct: false }
+                ],
+                topic: "Best Practices"
+            },
+            {
+                id: 18,
+                text: "What is Prompt Chaining?",
+                options: [
+                    { text: "A) Linking multiple prompts together sequentially", correct: true },
+                    { text: "B) Using the same prompt multiple times", correct: false },
+                    { text: "C) Connecting prompts to a database", correct: false },
+                    { text: "D) Breaking long prompts into smaller ones", correct: false }
+                ],
+                topic: "Advanced Techniques"
+            },
+            {
+                id: 19,
+                text: "How should you handle contradictory instructions in a prompt?",
+                options: [
+                    { text: "A) Include both and let the model decide", correct: false },
+                    { text: "B) Review the prompt for internal consistency", correct: true },
+                    { text: "C) Use contradictions intentionally", correct: false },
+                    { text: "D) Ignore the contradiction", correct: false }
+                ],
+                topic: "Common Pitfalls"
+            },
+            {
+                id: 20,
+                text: "What should you do first when testing prompt effectiveness?",
+                options: [
+                    { text: "A) Deploy it to production", correct: false },
+                    { text: "B) Assume it will work perfectly", correct: false },
+                    { text: "C) Create a testing framework and document variations", correct: true },
+                    { text: "D) Share it with others immediately", correct: false }
+                ],
+                topic: "Testing and Iteration"
+            },
+
+            // 6-Part Prompting Framework (Q21-Q40)
+            {
+                id: 21,
+                text: "What is the first part of the 6-Part Prompting Framework?",
+                options: [
+                    { text: "A) Context", correct: false },
+                    { text: "B) Command", correct: true },
+                    { text: "C) Logic", correct: false },
+                    { text: "D) Roleplay", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 22,
+                text: "What should a Command in the 6-Part Framework contain?",
+                options: [
+                    { text: "A) Vague requests", correct: false },
+                    { text: "B) Strong action verbs and specific goals", correct: true },
+                    { text: "C) Multiple contradictions", correct: false },
+                    { text: "D) Weak words like 'give' or 'help'", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 23,
+                text: "What is the 'Rule of Three' in the Context part of the framework?",
+                options: [
+                    { text: "A) Use exactly 3 sentences", correct: false },
+                    { text: "B) Who, What, When", correct: true },
+                    { text: "C) Three examples", correct: false },
+                    { text: "D) Three paragraphs", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 24,
+                text: "What is the Logic section of the 6-Part Framework?",
+                options: [
+                    { text: "A) Assigning a role to the AI", correct: false },
+                    { text: "B) Defining the output structure", correct: true },
+                    { text: "C) Providing background information", correct: false },
+                    { text: "D) Setting the time limit", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 25,
+                text: "What is the Roleplay part of the framework?",
+                options: [
+                    { text: "A) Playing games with the AI", correct: false },
+                    { text: "B) Assigning a specific character or expertise to the AI", correct: true },
+                    { text: "C) Asking the AI to pretend to be human", correct: false },
+                    { text: "D) Simulating a conversation", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 26,
+                text: "What does the Formatting section do?",
+                options: [
+                    { text: "A) Organizes information in a useful way", correct: true },
+                    { text: "B) Fixes spelling errors", correct: false },
+                    { text: "C) Changes the font", correct: false },
+                    { text: "D) Increases token count", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 27,
+                text: "What is the secret sauce of the 6-Part Framework?",
+                options: [
+                    { text: "A) Using more examples", correct: false },
+                    { text: "B) Setting higher temperature", correct: false },
+                    { text: "C) Questions that help tailor the response", correct: true },
+                    { text: "D) Using system prompts", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 28,
+                text: "How many questions should you ask in Round 1 of the Questions section?",
+                options: [
+                    { text: "A) 5", correct: false },
+                    { text: "B) 10", correct: true },
+                    { text: "C) 20", correct: false },
+                    { text: "D) 50", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 29,
+                text: "When should you stop the questioning rounds?",
+                options: [
+                    { text: "A) After one round", correct: false },
+                    { text: "B) When the AI starts repeating questions", correct: true },
+                    { text: "C) After 10 rounds", correct: false },
+                    { text: "D) When you get tired", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 30,
+                text: "What is Context Scaling in the framework?",
+                options: [
+                    { text: "A) Making context larger", correct: false },
+                    { text: "B) Adjusting context depth based on task complexity", correct: true },
+                    { text: "C) Reducing all contexts", correct: false },
+                    { text: "D) Multiplying context", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 31,
+                text: "For a simple request like 'restaurant recommendation', how much context is needed?",
+                options: [
+                    { text: "A) Extensive context", correct: false },
+                    { text: "B) Minimal context", correct: true },
+                    { text: "C) Maximum context", correct: false },
+                    { text: "D) No context", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 32,
+                text: "What is the benefit of using the 6-Part Framework?",
+                options: [
+                    { text: "A) It saves typing", correct: false },
+                    { text: "B) It produces professional-level results consistently", correct: true },
+                    { text: "C) It reduces model costs", correct: false },
+                    { text: "D) It makes prompts shorter", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 33,
+                text: "Which framework element should come first?",
+                options: [
+                    { text: "A) Context", correct: false },
+                    { text: "B) Roleplay", correct: false },
+                    { text: "C) Command", correct: true },
+                    { text: "D) Formatting", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 34,
+                text: "What is a common mistake in the Command section?",
+                options: [
+                    { text: "A) Being too specific", correct: false },
+                    { text: "B) Using weak words like 'give' or 'help'", correct: true },
+                    { text: "C) Using action verbs", correct: false },
+                    { text: "D) Being professional", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+            {
+                id: 35,
+                text: "For high-stakes decisions, what should you do differently?",
+                options: [
+                    { text: "A) Use fewer questions", correct: false },
+                    { text: "B) Invest heavily in context and questions", correct: true },
+                    { text: "C) Skip the roleplay section", correct: false },
+                    { text: "D) Use generic roles", correct: false }
+                ],
+                topic: "6-Part Framework"
+            },
+
+            // Context Engineering (Q36-Q60)
+            {
+                id: 36,
+                text: "What is Context Engineering primarily about?",
+                options: [
+                    { text: "A) Engineering software", correct: false },
+                    { text: "B) Designing systems that provide LLMs with the right information at the right time", correct: true },
+                    { text: "C) Creating new programming languages", correct: false },
+                    { text: "D) Building databases", correct: false }
+                ],
+                topic: "Context Engineering"
+            },
+            {
+                id: 37,
+                text: "When should Context Engineering be used?",
+                options: [
+                    { text: "A) For simple one-off requests", correct: false },
+                    { text: "B) For building AI agents and applications", correct: true },
+                    { text: "C) Only for creative writing", correct: false },
+                    { text: "D) Never", correct: false }
+                ],
+                topic: "Context Engineering"
+            },
+            {
+                id: 38,
+                text: "How many essential components do AI agents have?",
+                options: [
+                    { text: "A) 3", correct: false },
+                    { text: "B) 6", correct: true },
+                    { text: "C) 10", correct: false },
+                    { text: "D) 2", correct: false }
+                ],
+                topic: "AI Agent Components"
+            },
+            {
+                id: 39,
+                text: "What is the first component of an AI agent?",
+                options: [
+                    { text: "A) Tools", correct: false },
+                    { text: "B) Model", correct: true },
+                    { text: "C) Knowledge", correct: false },
+                    { text: "D) Audio", correct: false }
+                ],
+                topic: "AI Agent Components"
+            },
+            {
+                id: 40,
+                text: "What do Tools in an AI agent do?",
+                options: [
+                    { text: "A) Generate text", correct: false },
+                    { text: "B) Enable interaction with external systems", correct: true },
+                    { text: "C) Provide knowledge", correct: false },
+                    { text: "D) Set guardrails", correct: false }
+                ],
+                topic: "AI Agent Components"
+            },
+            {
+                id: 41,
+                text: "What is the difference between Knowledge and Memory in AI agents?",
+                options: [
+                    { text: "A) They are the same", correct: false },
+                    { text: "B) Knowledge is static; Memory is dynamic", correct: true },
+                    { text: "C) Memory is static; Knowledge is dynamic", correct: false },
+                    { text: "D) Only one is needed", correct: false }
+                ],
+                topic: "AI Agent Components"
+            },
+            {
+                id: 42,
+                text: "What is the purpose of Guardrails in AI agents?",
+                options: [
+                    { text: "A) To speed up processing", correct: false },
+                    { text: "B) To provide safety mechanisms and proper behavior", correct: true },
+                    { text: "C) To increase token usage", correct: false },
+                    { text: "D) To reduce context", correct: false }
+                ],
+                topic: "AI Agent Components"
+            },
+            {
+                id: 43,
+                text: "What is Orchestration in AI agents?",
+                options: [
+                    { text: "A) Creating music", correct: false },
+                    { text: "B) Deployment systems and monitoring", correct: true },
+                    { text: "C) Writing code", correct: false },
+                    { text: "D) Teaching the model", correct: false }
+                ],
+                topic: "AI Agent Components"
+            },
+            {
+                id: 44,
+                text: "According to the burger analogy, what is the bun?",
+                options: [
+                    { text: "A) Tools", correct: false },
+                    { text: "B) Model", correct: true },
+                    { text: "C) Knowledge", correct: false },
+                    { text: "D) Guardrails", correct: false }
+                ],
+                topic: "AI Agent Components"
+            },
+            {
+                id: 45,
+                text: "What is the main advantage of Context Engineering?",
+                options: [
+                    { text: "A) It's faster than prompt engineering", correct: false },
+                    { text: "B) It enables autonomous AI applications without iterative refinement", correct: true },
+                    { text: "C) It requires less AI knowledge", correct: false },
+                    { text: "D) It replaces all other engineering", correct: false }
+                ],
+                topic: "Context Engineering"
+            },
+            {
+                id: 46,
+                text: "How does Context Engineering differ from Prompt Engineering in complexity?",
+                options: [
+                    { text: "A) They are equal in complexity", correct: false },
+                    { text: "B) Prompt engineering is more complex", correct: false },
+                    { text: "C) Context engineering is more complex (code-like prompts with XML tags)", correct: true },
+                    { text: "D) Context engineering is simpler", correct: false }
+                ],
+                topic: "Context Engineering"
+            },
+            {
+                id: 47,
+                text: "What is a key scenario for Context Engineering?",
+                options: [
+                    { text: "A) Casual chatting", correct: false },
+                    { text: "B) Customer service agents handling multiple scenarios autonomously", correct: true },
+                    { text: "C) Writing emails", correct: false },
+                    { text: "D) Quick research", correct: false }
+                ],
+                topic: "Context Engineering"
+            },
+            {
+                id: 48,
+                text: "How should you design a context-engineered prompt?",
+                options: [
+                    { text: "A) Keep it very short", correct: false },
+                    { text: "B) Anticipate all scenarios upfront", correct: true },
+                    { text: "C) Wait for user feedback", correct: false },
+                    { text: "D) Make it generic", correct: false }
+                ],
+                topic: "Context Engineering"
+            },
+            {
+                id: 49,
+                text: "What role does RAG play in Context Engineering?",
+                options: [
+                    { text: "A) It generates all responses", correct: false },
+                    { text: "B) It retrieves relevant information from databases", correct: true },
+                    { text: "C) It replaces the model", correct: false },
+                    { text: "D) It has no role", correct: false }
+                ],
+                topic: "Context Engineering"
+            },
+            {
+                id: 50,
+                text: "What is essential when building a customer service AI agent?",
+                options: [
+                    { text: "A) Only one template", correct: false },
+                    { text: "B) Anticipating various inquiry types and escalation protocols", correct: true },
+                    { text: "C) Using only one tool", correct: false },
+                    { text: "D) No context needed", correct: false }
+                ],
+                topic: "Context Engineering"
+            },
+
+            // Image Generation Prompting (Q51-Q70)
+            {
+                id: 51,
+                text: "What is the first principle for image generation prompts?",
+                options: [
+                    { text: "A) Be vague", correct: false },
+                    { text: "B) Specificity over generality", correct: true },
+                    { text: "C) Use short prompts", correct: false },
+                    { text: "D) Avoid details", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 52,
+                text: "What should be the starting point in an image generation prompt?",
+                options: [
+                    { text: "A) The background", correct: false },
+                    { text: "B) The main subject", correct: true },
+                    { text: "C) The lighting", correct: false },
+                    { text: "D) The mood", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 53,
+                text: "What is Visual Hierarchy in image prompting?",
+                options: [
+                    { text: "A) The order of importance in the image", correct: true },
+                    { text: "B) A ranking system", correct: false },
+                    { text: "C) The color scheme", correct: false },
+                    { text: "D) The perspective", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 54,
+                text: "What photography language should be used in image generation prompts?",
+                options: [
+                    { text: "A) Plain everyday language", correct: false },
+                    { text: "B) Professional photography terminology (lens types, lighting setups)", correct: true },
+                    { text: "C) Technical programming terms", correct: false },
+                    { text: "D) Random words", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 55,
+                text: "How many key components does an effective image generation prompt have?",
+                options: [
+                    { text: "A) 3", correct: false },
+                    { text: "B) 5", correct: false },
+                    { text: "C) 7", correct: true },
+                    { text: "D) 10", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 56,
+                text: "What does 'of the uploaded photo' do in an image generation prompt?",
+                options: [
+                    { text: "A) Saves time", correct: false },
+                    { text: "B) Ensures consistency and likeness to the original", correct: true },
+                    { text: "C) Reduces quality", correct: false },
+                    { text: "D) Changes the subject", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 57,
+                text: "What type of lighting is often mentioned in professional portraiture prompts?",
+                options: [
+                    { text: "A) Flat lighting", correct: false },
+                    { text: "B) Rembrandt lighting", correct: true },
+                    { text: "C) Neon lighting", correct: false },
+                    { text: "D) No lighting", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 58,
+                text: "What photography style is often used for corporate headshots?",
+                options: [
+                    { text: "A) Cinematic", correct: false },
+                    { text: "B) Editorial", correct: false },
+                    { text: "C) Professional studio style with soft lighting", correct: true },
+                    { text: "D) Artistic", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 59,
+                text: "What should you specify for a Rembrandt lighting style?",
+                options: [
+                    { text: "A) Side lighting with high contrast and shadows", correct: true },
+                    { text: "B) Front lighting only", correct: false },
+                    { text: "C) Backlit only", correct: false },
+                    { text: "D) No lighting", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 60,
+                text: "What camera parameter adds professional detail to image prompts?",
+                options: [
+                    { text: "A) Color only", correct: false },
+                    { text: "B) Lens type, aperture (f-stop), focal length", correct: true },
+                    { text: "C) Resolution", correct: false },
+                    { text: "D) Brand name", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 61,
+                text: "What is shallow depth of field used for?",
+                options: [
+                    { text: "A) Landscape photography", correct: false },
+                    { text: "B) Making the background blurred to focus on the subject", correct: true },
+                    { text: "C) Wide angle shots", correct: false },
+                    { text: "D) Group photos", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 62,
+                text: "How should mood and atmosphere be described in image prompts?",
+                options: [
+                    { text: "A) With a single word", correct: false },
+                    { text: "B) With descriptive emotional adjectives", correct: true },
+                    { text: "C) Not at all", correct: false },
+                    { text: "D) Using numerical values", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 63,
+                text: "What is the 'Anatomy of Effective Prompts' for image generation?",
+                options: [
+                    { text: "A) Just describe the main subject", correct: false },
+                    { text: "B) Subject, Pose, Environment, Lighting, Style, Technical Specs, Mood", correct: true },
+                    { text: "C) Only background description", correct: false },
+                    { text: "D) Random elements", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 64,
+                text: "What makes branding prompts effective?",
+                options: [
+                    { text: "A) No details", correct: false },
+                    { text: "B) Subject grounding + posture + context + design elements", correct: true },
+                    { text: "C) Only colors", correct: false },
+                    { text: "D) Generic descriptions", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+            {
+                id: 65,
+                text: "What style is often used for magazine/fashion photography prompts?",
+                options: [
+                    { text: "A) Casual", correct: false },
+                    { text: "B) Documentary", correct: false },
+                    { text: "C) Editorial or Vogue style", correct: true },
+                    { text: "D) Sketch style", correct: false }
+                ],
+                topic: "Image Generation"
+            },
+
+            // MoE and Advanced Concepts (Q66-Q85)
+            {
+                id: 66,
+                text: "What does MoE stand for?",
+                options: [
+                    { text: "A) Model of Everything", correct: false },
+                    { text: "B) Mixture-of-Experts", correct: true },
+                    { text: "C) Multiple Operations Engine", correct: false },
+                    { text: "D) Memory-over-Execution", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 67,
+                text: "What is the main advantage of MoE architecture?",
+                options: [
+                    { text: "A) More parameters always", correct: false },
+                    { text: "B) Sparse activation - only uses subset of parameters per token", correct: true },
+                    { text: "C) Faster downloads", correct: false },
+                    { text: "D) No parameters", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 68,
+                text: "What are Experts in MoE?",
+                options: [
+                    { text: "A) Human consultants", correct: false },
+                    { text: "B) Specialized sub-networks within the model", correct: true },
+                    { text: "C) Training datasets", correct: false },
+                    { text: "D) Monitoring systems", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 69,
+                text: "What is a Gating Network in MoE?",
+                options: [
+                    { text: "A) A security feature", correct: false },
+                    { text: "B) A mechanism that decides which experts to route data to", correct: true },
+                    { text: "C) A database gate", correct: false },
+                    { text: "D) A network protocol", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 70,
+                text: "How does MoE change prompt engineering?",
+                options: [
+                    { text: "A) No change needed", correct: false },
+                    { text: "B) Raises importance of clear, domain-specific signals", correct: true },
+                    { text: "C) Makes prompts irrelevant", correct: false },
+                    { text: "D) Simplifies everything", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 71,
+                text: "What is Expert-Aware Prompting?",
+                options: [
+                    { text: "A) Asking experts for help", correct: false },
+                    { text: "B) Designing prompts to signal specific domains and wake desired experts", correct: true },
+                    { text: "C) Removing expertise", correct: false },
+                    { text: "D) Ignoring expert systems", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 72,
+                text: "What percentage of parameters are typically activated in sparse MoE?",
+                options: [
+                    { text: "A) 100%", correct: false },
+                    { text: "B) 10-20%", correct: true },
+                    { text: "C) 50%", correct: false },
+                    { text: "D) 5%", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 73,
+                text: "Which models are confirmed to use MoE?",
+                options: [
+                    { text: "A) Only GPT-4", correct: false },
+                    { text: "B) Grok 4, Gemini 2.5 Pro, DeepSeek-V3", correct: true },
+                    { text: "C) No frontier models use it", correct: false },
+                    { text: "D) Only small open-source models", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 74,
+                text: "What is the key benefit of MoE in scaling models?",
+                options: [
+                    { text: "A) Reduces quality", correct: false },
+                    { text: "B) Increases trillions of parameters with efficient inference", correct: true },
+                    { text: "C) Uses more energy", correct: false },
+                    { text: "D) Requires manual routing", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 75,
+                text: "How should you structure prompts for MoE models?",
+                options: [
+                    { text: "A) Same as dense models", correct: false },
+                    { text: "B) Front-load domain signals in first few lines", correct: true },
+                    { text: "C) Use long preambles", correct: false },
+                    { text: "D) Avoid structure", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 76,
+                text: "What vocabulary should be used for MoE models?",
+                options: [
+                    { text: "A) Clever and metaphorical", correct: false },
+                    { text: "B) Plain, domain-specific, unambiguous terms", correct: true },
+                    { text: "C) Euphemisms", correct: false },
+                    { text: "D) Random words", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 77,
+                text: "What should you avoid when prompting MoE models?",
+                options: [
+                    { text: "A) Domain signals", correct: false },
+                    { text: "B) Cute indirection and overlong preambles", correct: true },
+                    { text: "C) Examples", correct: false },
+                    { text: "D) Clear instructions", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 78,
+                text: "How can you stabilize consistency in MoE models?",
+                options: [
+                    { text: "A) Use higher temperature", correct: false },
+                    { text: "B) Lower temperature and top-p to reduce token drift", correct: true },
+                    { text: "C) Increase randomness", correct: false },
+                    { text: "D) No controls available", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 79,
+                text: "What happens if you mash multiple formats in MoE prompts?",
+                options: [
+                    { text: "A) It works perfectly", correct: false },
+                    { text: "B) Router oscillates between experts, reducing consistency", correct: true },
+                    { text: "C) Faster processing", correct: false },
+                    { text: "D) More creative output", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 80,
+                text: "What should you do when answers are inconsistent in MoE?",
+                options: [
+                    { text: "A) Give up", correct: false },
+                    { text: "B) Add sharper domain anchors and reduce temperature", correct: true },
+                    { text: "C) Use longer prompts", correct: false },
+                    { text: "D) Change the model", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+
+            // Best Practices and Testing (Q81-Q100)
+            {
+                id: 81,
+                text: "What is the most important aspect of effective prompts?",
+                options: [
+                    { text: "A) Length", correct: false },
+                    { text: "B) Being specific and clear", correct: true },
+                    { text: "C) Using fancy words", correct: false },
+                    { text: "D) Repetition", correct: false }
+                ],
+                topic: "Best Practices"
+            },
+            {
+                id: 82,
+                text: "What should you do with successful prompts?",
+                options: [
+                    { text: "A) Throw them away", correct: false },
+                    { text: "B) Document and build a prompt library", correct: true },
+                    { text: "C) Share without permission", correct: false },
+                    { text: "D) Never reuse them", correct: false }
+                ],
+                topic: "Best Practices"
+            },
+            {
+                id: 83,
+                text: "What is Structured Output?",
+                options: [
+                    { text: "A) Long paragraphs", correct: false },
+                    { text: "B) Using JSON, XML, or structured formats for complex data", correct: true },
+                    { text: "C) Bullet points only", correct: false },
+                    { text: "D) No structure", correct: false }
+                ],
+                topic: "Advanced Tips"
+            },
+            {
+                id: 84,
+                text: "How should you handle long conversations in prompts?",
+                options: [
+                    { text: "A) Never summarize", correct: false },
+                    { text: "B) Summarize previous context and use system messages", correct: true },
+                    { text: "C) Repeat everything", correct: false },
+                    { text: "D) Ignore history", correct: false }
+                ],
+                topic: "Advanced Tips"
+            },
+            {
+                id: 85,
+                text: "What is Multi-Modal Prompting?",
+                options: [
+                    { text: "A) Using only text", correct: false },
+                    { text: "B) Combining text and visual instructions with images", correct: true },
+                    { text: "C) Multiple users", correct: false },
+                    { text: "D) Different models", correct: false }
+                ],
+                topic: "Advanced Tips"
+            },
+            {
+                id: 86,
+                text: "What is A/B Testing in prompt engineering?",
+                options: [
+                    { text: "A) Testing the alphabet", correct: false },
+                    { text: "B) Creating and comparing multiple prompt versions", correct: true },
+                    { text: "C) Testing AI models A and B", correct: false },
+                    { text: "D) Mathematical formula testing", correct: false }
+                ],
+                topic: "Testing and Iteration"
+            },
+            {
+                id: 87,
+                text: "What should you evaluate in prompt results?",
+                options: [
+                    { text: "A) Only accuracy", correct: false },
+                    { text: "B) Accuracy, relevance, completeness, style, and format", correct: true },
+                    { text: "C) Only speed", correct: false },
+                    { text: "D) Nothing", correct: false }
+                ],
+                topic: "Testing and Iteration"
+            },
+            {
+                id: 88,
+                text: "What is the key to improving prompts over time?",
+                options: [
+                    { text: "A) Never change them", correct: false },
+                    { text: "B) Test variations and iterate based on performance", correct: true },
+                    { text: "C) Always use the first version", correct: false },
+                    { text: "D) Ask others to write them", correct: false }
+                ],
+                topic: "Best Practices"
+            },
+            {
+                id: 89,
+                text: "What is a common evaluation metric for prompts?",
+                options: [
+                    { text: "A) Only token count", correct: false },
+                    { text: "B) Consistency, instruction following, creativity, factual accuracy", correct: true },
+                    { text: "C) Only color", correct: false },
+                    { text: "D) File size", correct: false }
+                ],
+                topic: "Testing and Iteration"
+            },
+            {
+                id: 90,
+                text: "How many mistakes does the Prompt Coach prompt address?",
+                options: [
+                    { text: "A) 1", correct: false },
+                    { text: "B) 2", correct: false },
+                    { text: "C) 3", correct: false },
+                    { text: "D) 4 (clarify, add context, structure, suggest alternatives)", correct: true }
+                ],
+                topic: "Prompt Tools"
+            },
+            {
+                id: 91,
+                text: "What is a key principle for writing good prompts?",
+                options: [
+                    { text: "A) Be vague", correct: false },
+                    { text: "B) Start simple and add complexity gradually", correct: true },
+                    { text: "C) Make them as long as possible", correct: false },
+                    { text: "D) Never test", correct: false }
+                ],
+                topic: "Best Practices"
+            },
+            {
+                id: 92,
+                text: "How should examples in prompts be structured?",
+                options: [
+                    { text: "A) Randomly", correct: false },
+                    { text: "B) In the same domain, format, and language as the goal", correct: true },
+                    { text: "C) Different from the goal", correct: false },
+                    { text: "D) Not at all", correct: false }
+                ],
+                topic: "Best Practices"
+            },
+            {
+                id: 93,
+                text: "What is RAG in the context of prompting?",
+                options: [
+                    { text: "A) A feeling", correct: false },
+                    { text: "B) Retrieval-Augmented Generation - retrieving relevant context before prompting", correct: true },
+                    { text: "C) A type of music", correct: false },
+                    { text: "D) A cleaning tool", correct: false }
+                ],
+                topic: "Advanced Concepts"
+            },
+            {
+                id: 94,
+                text: "What should you do if retrieval context is noisy in RAG?",
+                options: [
+                    { text: "A) Ignore it", correct: false },
+                    { text: "B) Put a task summary before docs and keep them on-topic", correct: true },
+                    { text: "C) Use more documents", correct: false },
+                    { text: "D) Remove all context", correct: false }
+                ],
+                topic: "Advanced Concepts"
+            },
+            {
+                id: 95,
+                text: "Why is the future of AI interaction about prompting?",
+                options: [
+                    { text: "A) It's not", correct: false },
+                    { text: "B) It's the toolkit for clear, effective communication with AI", correct: true },
+                    { text: "C) Prompts will disappear", correct: false },
+                    { text: "D) AI will replace prompting", correct: false }
+                ],
+                topic: "Conclusion"
+            },
+            {
+                id: 96,
+                text: "What is the foundation principle of all good prompts?",
+                options: [
+                    { text: "A) Complexity", correct: false },
+                    { text: "B) Being short and vague", correct: false },
+                    { text: "C) Clear communication of intent", correct: true },
+                    { text: "D) Random elements", correct: false }
+                ],
+                topic: "Best Practices"
+            },
+            {
+                id: 97,
+                text: "How frequently should professionals update their prompts?",
+                options: [
+                    { text: "A) Never", correct: false },
+                    { text: "B) As models improve and new techniques emerge", correct: true },
+                    { text: "C) Only once a year", correct: false },
+                    { text: "D) Constantly without testing", correct: false }
+                ],
+                topic: "Best Practices"
+            },
+            {
+                id: 98,
+                text: "What is the bottom line for MoE prompting?",
+                options: [
+                    { text: "A) No changes needed from dense models", correct: false },
+                    { text: "B) Clear, early, domain-specific signals decide which experts activate", correct: true },
+                    { text: "C) MoE doesn't affect prompting", correct: false },
+                    { text: "D) MoE makes prompting irrelevant", correct: false }
+                ],
+                topic: "Mixture-of-Experts"
+            },
+            {
+                id: 99,
+                text: "What should be included in a prompt library?",
+                options: [
+                    { text: "A) Only successful prompts", correct: false },
+                    { text: "B) Templates, documented successes, model-specific variations", correct: true },
+                    { text: "C) Failed attempts only", correct: false },
+                    { text: "D) Random prompts", correct: false }
+                ],
+                topic: "Best Practices"
+            },
+            {
+                id: 100,
+                text: "What is the ultimate goal of mastering prompt engineering?",
+                options: [
+                    { text: "A) To replace AI developers", correct: false },
+                    { text: "B) To have a significant competitive advantage in the AI-driven future", correct: true },
+                    { text: "C) To make AI simple", correct: false },
+                    { text: "D) To eliminate AI use", correct: false }
+                ],
+                topic: "Conclusion"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        const totalQuestions = questions.length;
+        const passingPercentage = 70;
+        const passingScore = Math.ceil((totalQuestions * passingPercentage) / 100);
+
+        function startQuiz() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const question = questions[currentQuestionIndex];
+            const container = document.getElementById('questionsContainer');
+
+            let optionsHTML = '<div class="options">';
+            question.options.forEach((option, index) => {
+                const isChecked = userAnswers[question.id] === index ? 'checked' : '';
+                optionsHTML += `
+                    <div class="option ${isChecked ? 'selected' : ''}">
+                        <label>
+                            <input type="radio" name="option" value="${index}" ${isChecked}
+                                   onchange="selectAnswer(${question.id}, ${index})">
+                            ${option.text}
+                        </label>
+                    </div>
+                `;
+            });
+            optionsHTML += '</div>';
+
+            container.innerHTML = `
+                <div class="question-container active">
+                    <div class="question-number">Question ${currentQuestionIndex + 1} of ${totalQuestions}</div>
+                    <div class="question-text">${question.text}</div>
+                    ${optionsHTML}
+                </div>
+            `;
+
+            updateButtons();
+            updateProgress();
+        }
+
+        function selectAnswer(questionId, optionIndex) {
+            userAnswers[questionId] = optionIndex;
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            document.getElementById('answeredCount').textContent = answered;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            const percentage = Math.round((answered / totalQuestions) * 100);
+            document.getElementById('progressFill').style.width = percentage + '%';
+
+            let correct = 0;
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined && q.options[userAnswers[q.id]].correct) {
+                    correct++;
+                }
+            });
+
+            const scorePercentage = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+            document.getElementById('scorePreview').textContent = scorePercentage + '%';
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            prevBtn.disabled = currentQuestionIndex === 0;
+            if (currentQuestionIndex === totalQuestions - 1) {
+                nextBtn.textContent = 'Submit';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultScreen').classList.add('show');
+
+            let correct = 0;
+            let incorrect = 0;
+
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    if (q.options[userAnswers[q.id]].correct) {
+                        correct++;
+                    } else {
+                        incorrect++;
+                    }
+                }
+            });
+
+            const unanswered = totalQuestions - correct - incorrect;
+            const totalAnswered = correct + incorrect;
+            const percentage = totalAnswered > 0 ? Math.round((correct / totalAnswered) * 100) : 0;
+            const passed = percentage >= passingPercentage;
+
+            document.getElementById('scoreDisplay').innerHTML = `${percentage}%`;
+            document.getElementById('scoreDisplay').className = `score-display ${passed ? 'pass' : 'fail'}`;
+
+            document.getElementById('resultStatus').innerHTML = passed
+                ? `<span class="pass">✓ PASSED</span>`
+                : `<span class="fail">✗ FAILED</span>`;
+            document.getElementById('resultStatus').className = `result-status ${passed ? 'pass' : 'fail'}`;
+
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('wrongCount').textContent = incorrect + unanswered;
+
+            // Store result in localStorage for dashboard
+            const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
+            results.push({
+                examId: 'ai-prompt-engineering',
+                score: percentage,
+                correct: correct,
+                total: totalAnswered,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('quizResults', JSON.stringify(results));
+
+            // Answer Review
+            let reviewHTML = '';
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    const selectedIndex = userAnswers[q.id];
+                    const isCorrect = q.options[selectedIndex].correct;
+                    const userAnswer = q.options[selectedIndex].text;
+                    const correctAnswer = q.options.find(opt => opt.correct).text;
+
+                    reviewHTML += `
+                        <div class="answer-item ${isCorrect ? 'correct' : 'incorrect'}">
+                            <div class="answer-item-text">Q${q.id}: ${q.text.substring(0, 50)}...</div>
+                            <div class="answer-item-detail">
+                                Your answer: ${userAnswer}<br>
+                                ${!isCorrect ? `Correct answer: ${correctAnswer}` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('answerReview').innerHTML = reviewHTML;
+        }
+
+        window.addEventListener('load', () => {
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

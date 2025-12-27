@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Dashboard - Exam Management System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .dashboard-header h1 {
+            color: #333;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            padding: 15px;
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .stat-item p {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .exams-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: white;
+            border-radius: 2px;
+        }
+
+        /* Exam Cards */
+        .exams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        #totalExams{
+            color:#fff;
+        }
+
+        #testsTaken{
+            color:#fff;
+        }
+
+        #passedCount{
+            color:#fff;
+        }
+
+        #avgScore{
+            color:#fff;
+        }
+
+        .exam-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .exam-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .exam-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .exam-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .exam-icon.python {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            color: white;
+        }
+
+        .exam-icon.frontend {
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            color: white;
+        }
+
+        .exam-icon.ai-prompt-engineering {
+            background: linear-gradient(135deg, #9333ea 0%, #6d28d9 100%);
+            color: white;
+        }
+
+        .exam-title-section h3 {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .exam-difficulty {
+            color: #999;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .exam-details {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #666;
+            flex-grow: 1;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .detail-row:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #999;
+            font-weight: bold;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50 0%, #45a049 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .exam-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e8e8e8;
+            border-color: #19A26C;
+            color: #19A26C;
+        }
+
+        /* Results Section */
+        .results-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .results-title {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .results-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: #19A26C;
+            border-radius: 2px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .result-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #19A26C;
+            transition: all 0.3s ease;
+        }
+
+        .result-card.passed {
+            border-left-color: #4caf50;
+            background: #f1f8f5;
+        }
+
+        .result-card.failed {
+            border-left-color: #f44336;
+            background: #fdf5f5;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .result-exam-name {
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .result-score {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        .result-score.fail {
+            color: #f44336;
+        }
+
+        .result-details {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .result-date {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .result-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .result-status.passed {
+            background: #4caf50;
+            color: white;
+        }
+
+        .result-status.failed {
+            background: #f44336;
+            color: white;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stats-card {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            border-top: 3px solid #19A26C;
+        }
+
+        .stats-card.passed {
+            border-top-color: #4caf50;
+        }
+
+        .stats-card.failed {
+            border-top-color: #f44336;
+        }
+
+        .stats-label {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .stats-value {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .modal-btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: 25px;
+            }
+
+            .dashboard-header h1 {
+                font-size: 28px;
+            }
+
+            .exams-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .exam-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state-title {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* Achievements Section */
+        .achievements-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .achievements-title {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .achievements-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: #19A26C;
+            border-radius: 2px;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e0e0e0;
+            opacity: 0.4;
+        }
+
+        .badge.unlocked {
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            opacity: 1;
+            transform: scale(1.05);
+            border-color: #19A26C;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .badge-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .badge-name {
+            color: #666;
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .badge.unlocked .badge-name {
+            color: white;
+        }
+
+        .badge-description {
+            color: #999;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .badge.unlocked .badge-description {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .badge-date {
+            color: #999;
+            font-size: 10px;
+            margin-top: 8px;
+        }
+
+        .badge.unlocked .badge-date {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+
+        .no-badges {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .no-badges-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* Analytics Section */
+        .analytics-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .analytics-title {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .analytics-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 24px;
+            background: #19A26C;
+            border-radius: 2px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-card {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 4px solid #19A26C;
+        }
+
+        .analytics-card h3 {
+            color: #333;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .analytics-value {
+            color: #19A26C;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .analytics-label {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .analytics-trend {
+            color: #4caf50;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .analytics-trend.down {
+            color: #f44336;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container.small {
+            height: 300px;
+        }
+
+        .chart-title {
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .performance-table thead {
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            color: white;
+        }
+
+        .performance-table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .performance-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .performance-table tbody tr:hover {
+            background: #f5f5f5;
+        }
+
+        .score-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .score-badge.excellent {
+            background: #4caf50;
+        }
+
+        .score-badge.good {
+            background: #2196f3;
+        }
+
+        .score-badge.fair {
+            background: #ff9800;
+        }
+
+        .score-badge.poor {
+            background: #f44336;
+        }
+
+        .insights-section {
+            background: linear-gradient(135deg, #f0e6ff 0%, #f9f5ff 100%);
+            border-left: 4px solid #19A26C;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .insights-title {
+            color: #19A26C;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .insights-list {
+            list-style: none;
+        }
+
+        .insights-list li {
+            color: #666;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 13px;
+        }
+
+        .insights-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #19A26C;
+            font-weight: bold;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .comparison-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+        }
+
+        .comparison-item.best {
+            border-color: #4caf50;
+            background: #f1f8f5;
+        }
+
+        .comparison-item.worst {
+            border-color: #f44336;
+            background: #fdf5f5;
+        }
+
+        .comparison-label {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .comparison-value {
+            color: #333;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .no-analytics {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .no-analytics-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1>📚 Quiz Dashboard</h1>
+            <p>Manage and Track All Your Exams</p>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <h3>Total Exams</h3>
+                    <p id="totalExams">2</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Tests Taken</h3>
+                    <p id="testsTaken">0</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Passed</h3>
+                    <p id="passedCount">0</p>
+                </div>
+                <div class="stat-item">
+                    <h3>Avg Score</h3>
+                    <p id="avgScore">0%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Exams -->
+        <div class="exams-section">
+            <h2 class="section-title">Available Exams</h2>
+            <div class="exams-grid" id="examsGrid"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <h2 class="results-title">Recent Results</h2>
+            <div id="resultsContainer">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <div class="empty-state-title">No Results Yet</div>
+                    <div class="empty-state-text">Start taking exams to see your results here</div>
+                </div>
+            </div>
+            <div class="stats-grid" id="statsGrid" style="display: none;">
+                <div class="stats-card passed">
+                    <div class="stats-label">Total Passed</div>
+                    <div class="stats-value" id="statsPassed">0</div>
+                </div>
+                <div class="stats-card failed">
+                    <div class="stats-label">Total Failed</div>
+                    <div class="stats-value" id="statsFailed">0</div>
+                </div>
+                <div class="stats-card">
+                    <div class="stats-label">Success Rate</div>
+                    <div class="stats-value" id="statsSuccessRate">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="achievements-section">
+            <h2 class="achievements-title">🏆 Achievements & Badges</h2>
+            <div class="badges-grid" id="badgesContainer">
+                <div class="no-badges">
+                    <div class="no-badges-icon">🎯</div>
+                    <div style="font-weight: bold; margin-bottom: 5px;">No Badges Yet</div>
+                    <div>Earn badges by completing exams and achieving milestones</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Performance Analytics Section -->
+        <div class="analytics-section" id="analyticsSection" style="display: none;">
+            <h2 class="analytics-title">📊 Performance Analytics</h2>
+
+            <!-- Key Metrics Cards -->
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>Total Attempts</h3>
+                    <div class="analytics-value" id="metricTotalAttempts">0</div>
+                    <div class="analytics-label">Quiz attempts completed</div>
+                </div>
+                <div class="analytics-card">
+                    <h3>Average Score</h3>
+                    <div class="analytics-value" id="metricAvgScore">0%</div>
+                    <div class="analytics-label">Across all exams</div>
+                </div>
+                <div class="analytics-card">
+                    <h3>Best Exam</h3>
+                    <div class="analytics-value" id="metricBestExam">-</div>
+                    <div class="analytics-label">Highest scoring exam</div>
+                </div>
+                <div class="analytics-card">
+                    <h3>Improvement Rate</h3>
+                    <div class="analytics-value" id="metricImprovement">-</div>
+                    <div class="analytics-label" id="improvementLabel">Score change over time</div>
+                    <div class="analytics-trend" id="improvementTrend"></div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <!-- Score Distribution Chart -->
+                <div class="chart-container">
+                    <div class="chart-title">Score Distribution</div>
+                    <canvas id="scoreDistributionChart"></canvas>
+                </div>
+
+                <!-- Exam Comparison Chart -->
+                <div class="chart-container small">
+                    <div class="chart-title">Performance by Exam</div>
+                    <canvas id="examComparisonChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Progress Over Time Chart -->
+            <div class="chart-container full-width">
+                <div class="chart-title">Progress Timeline</div>
+                <canvas id="progressChart"></canvas>
+            </div>
+
+            <!-- Performance Details Table -->
+            <div style="margin-top: 30px;">
+                <h3 style="color: #333; margin-bottom: 15px;">Performance Details</h3>
+                <table class="performance-table">
+                    <thead>
+                        <tr>
+                            <th>Exam</th>
+                            <th>Score</th>
+                            <th>Correct Answers</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="performanceTableBody">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 20px;">No data available</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Insights Section -->
+            <div class="insights-section">
+                <div class="insights-title">💡 Insights & Recommendations</div>
+                <ul class="insights-list" id="insightsList">
+                    <li>Take an exam to start seeing personalized insights</li>
+                </ul>
+            </div>
+
+            <!-- Exam Comparison Grid -->
+            <div style="margin-top: 20px;">
+                <h3 style="color: #333; margin-bottom: 15px;">Exam Comparison</h3>
+                <div class="comparison-grid" id="comparisonGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="resultModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Recent Result Details</h2>
+            <p id="modalContent"></p>
+            <div class="modal-actions">
+                <button class="modal-btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Exam Data
+        const exams = [
+            {
+                id: 'python',
+                name: 'Python Basics',
+                description: 'Test your Python fundamentals knowledge',
+                icon: '🐍',
+                difficulty: 'Beginner to Intermediate',
+                totalQuestions: 60,
+                passingMarks: 70,
+                file: 'python-index.html',
+                topics: ['Variables', 'Data Types', 'Functions', 'OOP', 'Control Flow']
+            },
+            {
+                id: 'frontend',
+                name: 'Frontend Development',
+                description: 'Test your HTML, CSS, JavaScript, and React knowledge',
+                icon: '🎨',
+                difficulty: 'Beginner to Intermediate',
+                totalQuestions: 60,
+                passingMarks: 70,
+                file: 'frontend-index.html',
+                topics: ['HTML', 'CSS', 'JavaScript', 'React', 'Web APIs']
+            },
+            {
+                id: 'ai-prompt-engineering',
+                name: 'AI Prompt Engineering',
+                description: 'Master the art of communicating with AI systems effectively',
+                icon: '🤖',
+                difficulty: 'Intermediate to Advanced',
+                totalQuestions: 100,
+                passingMarks: 70,
+                file: 'ai-prompt-engineering-index.html',
+                topics: ['Prompt Engineering', 'Context Engineering', '6-Part Framework', 'Image Generation', 'MoE']
+            }
+        ];
+
+        // Initialize Dashboard
+        function initializeDashboard() {
+            loadExams();
+            loadResults();
+            updateStatistics();
+        }
+
+        // Load Exams
+        function loadExams() {
+            const examsGrid = document.getElementById('examsGrid');
+            examsGrid.innerHTML = exams.map(exam => `
+                <div class="exam-card">
+                    <div class="exam-card-header">
+                        <div class="exam-icon ${exam.id}">
+                            ${exam.icon}
+                        </div>
+                        <div class="exam-title-section">
+                            <h3>${exam.name}</h3>
+                            <div class="exam-difficulty">⭐ ${exam.difficulty}</div>
+                        </div>
+                    </div>
+                    <div class="exam-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Questions:</span>
+                            <span class="detail-value">${exam.totalQuestions}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Passing:</span>
+                            <span class="detail-value">${exam.passingMarks}%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value" id="status-${exam.id}">Not Taken</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-${exam.id}" style="width: 0%;"></div>
+                    </div>
+                    <div class="exam-actions">
+                        <button class="btn btn-start" onclick="startExam('${exam.id}')">
+                            🚀 Start Exam
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update exam status from results
+            const results = getResults();
+            results.forEach(result => {
+                const statusEl = document.getElementById(`status-${result.examId}`);
+                const progressEl = document.getElementById(`progress-${result.examId}`);
+                if (statusEl) {
+                    const passed = result.score >= 70;
+                    statusEl.textContent = passed ? '✓ Passed' : '✗ Failed';
+                    statusEl.style.color = passed ? '#4caf50' : '#f44336';
+                }
+                if (progressEl) {
+                    progressEl.style.width = result.score + '%';
+                }
+            });
+        }
+
+        // Start Exam
+        function startExam(examId) {
+            const exam = exams.find(e => e.id === examId);
+            if (exam) {
+                window.location.href = exam.file;
+            }
+        }
+
+        // Load Results from localStorage
+        function loadResults() {
+            const results = getResults();
+            const resultsContainer = document.getElementById('resultsContainer');
+
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div class="empty-state-title">No Results Yet</div>
+                        <div class="empty-state-text">Start taking exams to see your results here</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort results by date (newest first)
+            results.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Show only last 10 results
+            const recentResults = results.slice(0, 10);
+
+            resultsContainer.innerHTML = `
+                <div class="results-grid">
+                    ${recentResults.map(result => {
+                        const exam = exams.find(e => e.id === result.examId);
+                        const passed = result.score >= 70;
+                        const date = new Date(result.date).toLocaleDateString();
+                        const time = new Date(result.date).toLocaleTimeString();
+                        return `
+                            <div class="result-card ${passed ? 'passed' : 'failed'}" onclick="showResultDetails('${result.examId}', ${result.score}, ${result.correct}, ${result.total})">
+                                <div class="result-header">
+                                    <div class="result-exam-name">${exam.name}</div>
+                                    <div class="result-score ${!passed ? 'fail' : ''}">
+                                        ${result.score}%
+                                    </div>
+                                </div>
+                                <div class="result-details">
+                                    <span>Correct: <strong>${result.correct}/${result.total}</strong></span>
+                                    <span class="result-status ${passed ? 'passed' : 'failed'}">
+                                        ${passed ? '✓ PASSED' : '✗ FAILED'}
+                                    </span>
+                                </div>
+                                <div class="result-date">
+                                    📅 ${date} at ${time}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            // Show stats grid
+            document.getElementById('statsGrid').style.display = 'grid';
+        }
+
+        // Get Results from localStorage
+        function getResults() {
+            const results = localStorage.getItem('quizResults');
+            return results ? JSON.parse(results) : [];
+        }
+
+        // Store Result
+        function storeResult(examId, score, correct, total) {
+            const results = getResults();
+            results.push({
+                examId: examId,
+                score: score,
+                correct: correct,
+                total: total,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('quizResults', JSON.stringify(results));
+        }
+
+        // Update Statistics
+        function updateStatistics() {
+            const results = getResults();
+
+            // Total exams
+            document.getElementById('totalExams').textContent = exams.length;
+
+            // Tests taken
+            document.getElementById('testsTaken').textContent = results.length;
+
+            if (results.length === 0) {
+                document.getElementById('passedCount').textContent = '0';
+                document.getElementById('avgScore').textContent = '0%';
+                return;
+            }
+
+            // Passed count
+            const passedCount = results.filter(r => r.score >= 70).length;
+            document.getElementById('passedCount').textContent = passedCount;
+
+            // Average score
+            const avgScore = Math.round(results.reduce((sum, r) => sum + r.score, 0) / results.length);
+            document.getElementById('avgScore').textContent = avgScore + '%';
+
+            // Stats cards
+            const failedCount = results.length - passedCount;
+            const successRate = Math.round((passedCount / results.length) * 100);
+
+            document.getElementById('statsPassed').textContent = passedCount;
+            document.getElementById('statsFailed').textContent = failedCount;
+            document.getElementById('statsSuccessRate').textContent = successRate + '%';
+        }
+
+        // Show Result Details
+        function showResultDetails(examId, score, correct, total) {
+            const exam = exams.find(e => e.id === examId);
+            const passed = score >= 70;
+
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+
+            modalTitle.textContent = `${exam.name} - Result Details`;
+            modalContent.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">
+                        ${passed ? '✓' : '✗'}
+                    </div>
+                    <div style="font-size: 24px; color: ${passed ? '#4caf50' : '#f44336'}; font-weight: bold; margin-bottom: 15px;">
+                        ${score}%
+                    </div>
+                    <div style="font-size: 16px; color: #666; margin-bottom: 20px;">
+                        You answered <strong>${correct} out of ${total}</strong> questions correctly.
+                    </div>
+                    <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="margin-bottom: 10px;">
+                            <span style="color: #666;">Passing Score:</span> <strong>70%</strong>
+                        </div>
+                        <div>
+                            <span style="color: #666;">Status:</span>
+                            <strong style="color: ${passed ? '#4caf50' : '#f44336'};">
+                                ${passed ? '✓ PASSED' : '✗ FAILED'}
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            openModal();
+        }
+
+        // Modal Functions
+        function openModal() {
+            document.getElementById('resultModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('resultModal');
+            if (event.target == modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Badges Definition
+        const badgeDefinitions = [
+            {
+                id: 'first-attempt',
+                name: 'First Step',
+                icon: '🎯',
+                description: 'Complete your first exam',
+                condition: () => getResults().length >= 1
+            },
+            {
+                id: 'perfect-python',
+                name: 'Python Master',
+                icon: '🐍',
+                description: 'Score 100% in Python',
+                condition: () => getResults().some(r => r.examId === 'python' && r.score === 100)
+            },
+            {
+                id: 'perfect-frontend',
+                name: 'Frontend Expert',
+                icon: '🎨',
+                description: 'Score 100% in Frontend',
+                condition: () => getResults().some(r => r.examId === 'frontend' && r.score === 100)
+            },
+            {
+                id: 'perfect-ai',
+                name: 'AI Prompt Wizard',
+                icon: '🤖',
+                description: 'Score 100% in AI Prompt Engineering',
+                condition: () => getResults().some(r => r.examId === 'ai-prompt-engineering' && r.score === 100)
+            },
+            {
+                id: 'all-passed',
+                name: 'All-Star',
+                icon: '⭐',
+                description: 'Pass all available exams',
+                condition: () => {
+                    const results = getResults();
+                    return exams.every(exam => results.some(r => r.examId === exam.id && r.score >= 70));
+                }
+            },
+            {
+                id: 'consistency',
+                name: 'Consistent Performer',
+                icon: '📈',
+                description: 'Average score of 80% or higher',
+                condition: () => {
+                    const results = getResults();
+                    if (results.length === 0) return false;
+                    const avgScore = results.reduce((sum, r) => sum + r.score, 0) / results.length;
+                    return avgScore >= 80;
+                }
+            },
+            {
+                id: 'perfect-score',
+                name: 'Knowledge Master',
+                icon: '👑',
+                description: 'Perfect 100% in multiple exams',
+                condition: () => getResults().filter(r => r.score === 100).length >= 2
+            },
+            {
+                id: 'high-flyer',
+                name: 'High Flyer',
+                icon: '🚀',
+                description: 'Complete all 100 AI Prompt Engineering questions',
+                condition: () => getResults().some(r => r.examId === 'ai-prompt-engineering' && r.total === 100)
+            }
+        ];
+
+        // Load and Display Achievements
+        function loadAchievements() {
+            const badgesContainer = document.getElementById('badgesContainer');
+            const unlockedBadges = [];
+            const lockedBadges = [];
+
+            badgeDefinitions.forEach(badge => {
+                const unlocked = badge.condition();
+                const unlockedBadge = getUnlockedBadges().find(b => b.id === badge.id);
+
+                if (unlocked) {
+                    unlockedBadges.push({
+                        ...badge,
+                        unlockedDate: unlockedBadge ? unlockedBadge.unlockedDate : new Date().toISOString()
+                    });
+                } else {
+                    lockedBadges.push(badge);
+                }
+            });
+
+            if (unlockedBadges.length === 0 && lockedBadges.length === 0) {
+                badgesContainer.innerHTML = `
+                    <div class="no-badges">
+                        <div class="no-badges-icon">🎯</div>
+                        <div style="font-weight: bold; margin-bottom: 5px;">No Badges Yet</div>
+                        <div>Earn badges by completing exams and achieving milestones</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let badgesHTML = '';
+
+            // Display unlocked badges first
+            unlockedBadges.forEach(badge => {
+                const date = new Date(badge.unlockedDate).toLocaleDateString();
+                badgesHTML += `
+                    <div class="badge unlocked" title="${badge.description}">
+                        <div class="badge-icon">${badge.icon}</div>
+                        <div class="badge-name">${badge.name}</div>
+                        <div class="badge-description">${badge.description}</div>
+                        <div class="badge-date">Unlocked ${date}</div>
+                    </div>
+                `;
+            });
+
+            // Display locked badges
+            lockedBadges.forEach(badge => {
+                badgesHTML += `
+                    <div class="badge" title="${badge.description}">
+                        <div class="badge-icon">${badge.icon}</div>
+                        <div class="badge-name">${badge.name}</div>
+                        <div class="badge-description">${badge.description}</div>
+                        <div class="badge-date">Locked</div>
+                    </div>
+                `;
+            });
+
+            badgesContainer.innerHTML = badgesHTML;
+
+            // Save unlocked badges
+            saveUnlockedBadges(unlockedBadges);
+        }
+
+        function getUnlockedBadges() {
+            const badges = localStorage.getItem('unlockedBadges');
+            return badges ? JSON.parse(badges) : [];
+        }
+
+        function saveUnlockedBadges(badges) {
+            const existingBadges = getUnlockedBadges();
+            const newBadges = badges.filter(b => !existingBadges.some(e => e.id === b.id));
+            const allBadges = [...existingBadges, ...newBadges];
+            localStorage.setItem('unlockedBadges', JSON.stringify(allBadges));
+        }
+
+
+        // Analytics Functions
+        let chartInstances = {};
+
+        function calculateMetrics() {
+            const results = getResults();
+
+            if (results.length === 0) {
+                return {
+                    totalAttempts: 0,
+                    avgScore: 0,
+                    bestExam: null,
+                    improvement: null
+                };
+            }
+
+            const totalAttempts = results.length;
+            const avgScore = Math.round(results.reduce((sum, r) => sum + r.score, 0) / results.length);
+
+            // Find best exam
+            let bestExam = null;
+            let bestScore = -1;
+            const examScores = {};
+
+            results.forEach(r => {
+                if (!examScores[r.examId]) {
+                    examScores[r.examId] = [];
+                }
+                examScores[r.examId].push(r.score);
+            });
+
+            for (const [examId, scores] of Object.entries(examScores)) {
+                const avgExamScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+                if (avgExamScore > bestScore) {
+                    bestScore = avgExamScore;
+                    const exam = exams.find(e => e.id === examId);
+                    bestExam = exam ? exam.name : examId;
+                }
+            }
+
+            // Calculate improvement
+            let improvement = null;
+            if (results.length >= 2) {
+                const sortedResults = [...results].sort((a, b) => new Date(a.date) - new Date(b.date));
+                const firstScore = sortedResults[0].score;
+                const lastScore = sortedResults[sortedResults.length - 1].score;
+                improvement = lastScore - firstScore;
+            }
+
+            return {
+                totalAttempts,
+                avgScore,
+                bestExam,
+                improvement
+            };
+        }
+
+        function renderScoreDistributionChart() {
+            const results = getResults();
+            const ctx = document.getElementById('scoreDistributionChart');
+
+            if (!ctx) return;
+
+            // Destroy existing chart if it exists
+            if (chartInstances.scoreDistribution) {
+                chartInstances.scoreDistribution.destroy();
+            }
+
+            // Group scores into ranges
+            const ranges = {
+                '90-100': 0,
+                '80-89': 0,
+                '70-79': 0,
+                '60-69': 0,
+                '0-59': 0
+            };
+
+            results.forEach(r => {
+                if (r.score >= 90) ranges['90-100']++;
+                else if (r.score >= 80) ranges['80-89']++;
+                else if (r.score >= 70) ranges['70-79']++;
+                else if (r.score >= 60) ranges['60-69']++;
+                else ranges['0-59']++;
+            });
+
+            chartInstances.scoreDistribution = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(ranges),
+                    datasets: [{
+                        label: 'Number of Attempts',
+                        data: Object.values(ranges),
+                        backgroundColor: [
+                            '#4caf50',
+                            '#2196f3',
+                            '#ff9800',
+                            '#ff6b6b',
+                            '#f44336'
+                        ],
+                        borderRadius: 5,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderExamComparisonChart() {
+            const results = getResults();
+            const ctx = document.getElementById('examComparisonChart');
+
+            if (!ctx) return;
+
+            if (chartInstances.examComparison) {
+                chartInstances.examComparison.destroy();
+            }
+
+            // Calculate average score per exam
+            const examScores = {};
+            results.forEach(r => {
+                if (!examScores[r.examId]) {
+                    examScores[r.examId] = [];
+                }
+                examScores[r.examId].push(r.score);
+            });
+
+            const labels = [];
+            const data = [];
+            const colors = ['#9333ea', '#2196f3', '#ff9800'];
+
+            exams.forEach((exam, index) => {
+                const scores = examScores[exam.id] || [];
+                const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+                labels.push(exam.name);
+                data.push(avgScore);
+            });
+
+            chartInstances.examComparison = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderProgressChart() {
+            const results = getResults();
+            const ctx = document.getElementById('progressChart');
+
+            if (!ctx) return;
+
+            if (chartInstances.progress) {
+                chartInstances.progress.destroy();
+            }
+
+            // Sort results by date
+            const sortedResults = [...results].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const labels = sortedResults.map(r => new Date(r.date).toLocaleDateString());
+            const data = sortedResults.map(r => r.score);
+
+            chartInstances.progress = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Score (%)',
+                        data: data,
+                        borderColor: '#19A26C',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                        pointBackgroundColor: '#19A26C',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            labels: {
+                                padding: 15
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 10
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function populatePerformanceTable() {
+            const results = getResults();
+            const tbody = document.getElementById('performanceTableBody');
+
+            if (results.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 20px;">No data available</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Sort by date (newest first)
+            const sortedResults = [...results].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            tbody.innerHTML = sortedResults.map(result => {
+                const exam = exams.find(e => e.id === result.examId);
+                const passed = result.score >= 70;
+                const scoreClass = result.score >= 80 ? 'excellent' : result.score >= 70 ? 'good' : result.score >= 60 ? 'fair' : 'poor';
+                const date = new Date(result.date).toLocaleDateString();
+
+                return `
+                    <tr>
+                        <td>${exam ? exam.name : result.examId}</td>
+                        <td><span class="score-badge ${scoreClass}">${result.score}%</span></td>
+                        <td>${result.correct}/${result.total}</td>
+                        <td style="color: ${passed ? '#4caf50' : '#f44336'}; font-weight: bold;">
+                            ${passed ? '✓ PASSED' : '✗ FAILED'}
+                        </td>
+                        <td>${date}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function generateInsights() {
+            const results = getResults();
+            const insightsList = document.getElementById('insightsList');
+
+            if (results.length === 0) {
+                insightsList.innerHTML = '<li>Take an exam to start seeing personalized insights</li>';
+                return;
+            }
+
+            const insights = [];
+            const metrics = calculateMetrics();
+
+            // Insight 1: Overall performance
+            if (metrics.avgScore >= 80) {
+                insights.push('🌟 Excellent performance! Your average score is above 80%.');
+            } else if (metrics.avgScore >= 70) {
+                insights.push('✓ Good work! You\'re meeting the passing threshold. Keep practicing to improve further.');
+            } else {
+                insights.push('💪 Keep pushing! Review the concepts and try again to improve your scores.');
+            }
+
+            // Insight 2: Best exam
+            if (metrics.bestExam) {
+                insights.push(`🏆 You're strongest in <strong>${metrics.bestExam}</strong>. Consider helping others with this topic!`);
+            }
+
+            // Insight 3: Improvement trend
+            if (metrics.improvement !== null) {
+                if (metrics.improvement > 0) {
+                    insights.push(`📈 Great improvement! Your last attempt was ${metrics.improvement} points higher than your first.`);
+                } else if (metrics.improvement < 0) {
+                    insights.push(`📉 Your recent score dipped. Review the material and try again with a fresh perspective.`);
+                } else {
+                    insights.push(`➡️ Your scores have remained consistent. Try focusing on different areas of the exam.`);
+                }
+            }
+
+            // Insight 4: Exam coverage
+            const uniqueExams = new Set(results.map(r => r.examId)).size;
+            if (uniqueExams < exams.length) {
+                const missingExams = exams.filter(e => !results.some(r => r.examId === e.id)).map(e => e.name);
+                insights.push(`📚 You haven't taken ${missingExams.join(' and ')}. Try these exams to expand your knowledge!`);
+            } else {
+                insights.push('🎓 Impressive! You\'ve completed all available exams. Keep practicing to maintain your knowledge!');
+            }
+
+            // Insight 5: Attempt frequency
+            if (results.length >= 5) {
+                insights.push('🔄 You\'re a dedicated learner! Multiple attempts show commitment to mastery.');
+            }
+
+            insightsList.innerHTML = insights.map(insight => `<li>${insight}</li>`).join('');
+        }
+
+        function populateComparisonGrid() {
+            const results = getResults();
+            const comparisonGrid = document.getElementById('comparisonGrid');
+
+            if (results.length === 0) {
+                comparisonGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #999;">No data available for comparison</div>';
+                return;
+            }
+
+            // Calculate best and worst exam performance
+            const examPerformance = {};
+            exams.forEach(exam => {
+                const examResults = results.filter(r => r.examId === exam.id);
+                if (examResults.length > 0) {
+                    const avgScore = Math.round(examResults.reduce((sum, r) => sum + r.score, 0) / examResults.length);
+                    examPerformance[exam.id] = {
+                        name: exam.name,
+                        avgScore: avgScore,
+                        attempts: examResults.length
+                    };
+                }
+            });
+
+            const performances = Object.values(examPerformance);
+            if (performances.length === 0) {
+                comparisonGrid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px; color: #999;">No exam data available</div>';
+                return;
+            }
+
+            // Find best and worst
+            let bestPerf = performances[0];
+            let worstPerf = performances[0];
+
+            performances.forEach(perf => {
+                if (perf.avgScore > bestPerf.avgScore) bestPerf = perf;
+                if (perf.avgScore < worstPerf.avgScore) worstPerf = perf;
+            });
+
+            comparisonGrid.innerHTML = `
+                <div class="comparison-item best">
+                    <div class="comparison-label">📈 Best Performance</div>
+                    <div class="comparison-value">${bestPerf.name}</div>
+                    <div style="color: #4caf50; font-weight: bold; margin-top: 8px;">${bestPerf.avgScore}% avg</div>
+                </div>
+                <div class="comparison-item worst">
+                    <div class="comparison-label">📉 Needs Improvement</div>
+                    <div class="comparison-value">${worstPerf.name}</div>
+                    <div style="color: #f44336; font-weight: bold; margin-top: 8px;">${worstPerf.avgScore}% avg</div>
+                </div>
+            `;
+        }
+
+        function loadAnalytics() {
+            const results = getResults();
+            const analyticsSection = document.getElementById('analyticsSection');
+
+            // Show analytics only if there are results
+            if (results.length === 0) {
+                analyticsSection.style.display = 'none';
+                return;
+            }
+
+            analyticsSection.style.display = 'block';
+
+            // Calculate and display metrics
+            const metrics = calculateMetrics();
+            document.getElementById('metricTotalAttempts').textContent = metrics.totalAttempts;
+            document.getElementById('metricAvgScore').textContent = metrics.avgScore + '%';
+            document.getElementById('metricBestExam').textContent = metrics.bestExam || '-';
+
+            if (metrics.improvement !== null) {
+                const improvementElement = document.getElementById('metricImprovement');
+                const trendElement = document.getElementById('improvementTrend');
+
+                if (metrics.improvement > 0) {
+                    improvementElement.textContent = '+' + metrics.improvement + '%';
+                    trendElement.textContent = '📈 Improving';
+                    trendElement.classList.remove('down');
+                } else if (metrics.improvement < 0) {
+                    improvementElement.textContent = metrics.improvement + '%';
+                    trendElement.textContent = '📉 Declining';
+                    trendElement.classList.add('down');
+                } else {
+                    improvementElement.textContent = '0%';
+                    trendElement.textContent = '➡️ Consistent';
+                    trendElement.classList.remove('down');
+                }
+            } else {
+                document.getElementById('metricImprovement').textContent = '-';
+            }
+
+            // Render charts
+            setTimeout(() => {
+                renderScoreDistributionChart();
+                renderExamComparisonChart();
+                renderProgressChart();
+            }, 100);
+
+            // Populate table and insights
+            populatePerformanceTable();
+            generateInsights();
+            populateComparisonGrid();
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initializeDashboard();
+            loadAchievements();
+            loadAnalytics();
+        });
+
+        // Expose storeResult globally for quiz files
+        window.storeQuizResult = function(examId, score, correct, total) {
+            storeResult(examId, score, correct, total);
+            // Reload dashboard stats (if dashboard is open)
+            if (document.getElementById('testsTaken')) {
+                updateStatistics();
+                loadResults();
+                loadAchievements();
+                loadAnalytics();
+            }
+        };
+    </script>
+</body>
+</html>

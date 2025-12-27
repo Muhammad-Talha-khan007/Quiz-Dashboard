@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Development MCQ Exam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #19A26C;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .quiz-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .info-box {
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .info-box h3 {
+            color: #19A26C;
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .info-box p {
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #19A26C 0%, #148A5A 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .question-number {
+            color: #19A26C;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #19A26C;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .option:hover {
+            border-color: #19A26C;
+            background: #f9f9f9;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .option.selected {
+            border-color: #19A26C;
+            background: #f0f4ff;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .result-container {
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .pass {
+            color: #4caf50;
+        }
+
+        .fail {
+            color: #f44336;
+        }
+
+        .result-status {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 4px solid #19A26C;
+        }
+
+        .stat-card.correct {
+            border-top-color: #4caf50;
+        }
+
+        .stat-card.incorrect {
+            border-top-color: #f44336;
+        }
+
+        .stat-card.passing {
+            border-top-color: #2196f3;
+        }
+
+        .stat-card h4 {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .answer-review {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .answer-review h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .answer-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #e0e0e0;
+        }
+
+        .answer-item.correct {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .answer-item.incorrect {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+
+        .answer-item-text {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .answer-item-detail {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .correct-text {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .incorrect-text {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .start-screen p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .start-screen .rules {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .start-screen .rules ul {
+            margin-left: 20px;
+        }
+
+        .start-screen .rules li {
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .quiz-info {
+                flex-direction: column;
+            }
+
+            .info-box {
+                margin: 5px 0;
+            }
+
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="startScreen" class="start-screen">
+            <div class="header">
+                <h1>Frontend Development MCQ Exam</h1>
+                <p>Test Your Frontend Knowledge</p>
+            </div>
+
+            <h2>Welcome to the Quiz!</h2>
+            <p>This exam covers HTML, CSS, JavaScript, React, and Web APIs. Challenge yourself and see how much you know about frontend development.</p>
+
+            <div class="rules">
+                <h3 style="color: #333; margin-bottom: 15px;">Exam Details:</h3>
+                <ul>
+                    <li><strong>Total Questions:</strong> 60</li>
+                    <li><strong>Time Limit:</strong> No time limit</li>
+                    <li><strong>Passing Score:</strong> 70% (42/60 correct)</li>
+                    <li><strong>Topics:</strong> HTML, CSS, JavaScript, React, Web APIs, Responsive Design</li>
+                    <li><strong>Difficulty:</strong> Beginner to Intermediate</li>
+                </ul>
+            </div>
+
+            <button class="btn-primary" onclick="startQuiz()" style="width: 200px; margin: 0 auto; display: block;">Start Quiz</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizScreen" style="display: none;">
+            <div class="header">
+                <h1>Frontend Development MCQ Exam</h1>
+            </div>
+
+            <div class="quiz-info">
+                <div class="info-box">
+                    <h3>Question</h3>
+                    <p><span id="currentQuestion">1</span>/60</p>
+                </div>
+                <div class="info-box">
+                    <h3>Answered</h3>
+                    <p id="answeredCount">0</p>
+                </div>
+                <div class="info-box">
+                    <h3>Score</h3>
+                    <p id="scorePreview">0%</p>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="button-group">
+                <button class="btn-secondary" id="prevBtn" onclick="previousQuestion()">Previous</button>
+                <button class="btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultScreen" class="result-container">
+            <div class="result-header">
+                <h2>Quiz Results</h2>
+                <div class="score-display" id="scoreDisplay"></div>
+                <div class="result-status" id="resultStatus"></div>
+            </div>
+
+            <div class="result-stats">
+                <div class="stat-card correct">
+                    <h4>Correct Answers</h4>
+                    <p id="correctCount">0</p>
+                </div>
+                <div class="stat-card incorrect">
+                    <h4>Wrong Answers</h4>
+                    <p id="wrongCount">0</p>
+                </div>
+                <div class="stat-card passing">
+                    <h4>Passing Marks</h4>
+                    <p>70%</p>
+                </div>
+            </div>
+
+            <div class="answer-review">
+                <h3>Answer Review</h3>
+                <div id="answerReview"></div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="window.location.href='dashboard-index.html'">📊 Back to Dashboard</button>
+                <button class="btn-primary" onclick="location.reload()">🔄 Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Questions Data
+        const questions = [
+            {
+                id: 1,
+                text: "What does HTML stand for?",
+                options: [
+                    { text: "A) Hyper Text Markup Language", correct: true },
+                    { text: "B) High Tech Modern Language", correct: false },
+                    { text: "C) Home Tool Markup Language", correct: false },
+                    { text: "D) Hyperlinks and Text Markup Language", correct: false }
+                ],
+                topic: "HTML Definition"
+            },
+            {
+                id: 2,
+                text: "Which tag is used to define the main heading of a page?",
+                options: [
+                    { text: "A) &lt;h6&gt;", correct: false },
+                    { text: "B) &lt;h1&gt;", correct: true },
+                    { text: "C) &lt;header&gt;", correct: false },
+                    { text: "D) &lt;title&gt;", correct: false }
+                ],
+                topic: "HTML Headings"
+            },
+            {
+                id: 3,
+                text: "What is the correct way to create a hyperlink?",
+                options: [
+                    { text: "A) &lt;link href=\"url\"&gt;Click here&lt;/link&gt;", correct: false },
+                    { text: "B) &lt;a href=\"url\"&gt;Click here&lt;/a&gt;", correct: true },
+                    { text: "C) &lt;hyperlink&gt;url&lt;/hyperlink&gt;", correct: false },
+                    { text: "D) &lt;url&gt;Click here&lt;/url&gt;", correct: false }
+                ],
+                topic: "HTML Links"
+            },
+            {
+                id: 4,
+                text: "Which attribute specifies the URL of a page the link goes to?",
+                options: [
+                    { text: "A) src", correct: false },
+                    { text: "B) link", correct: false },
+                    { text: "C) href", correct: true },
+                    { text: "D) url", correct: false }
+                ],
+                topic: "HTML Attributes"
+            },
+            {
+                id: 5,
+                text: "What is the purpose of the &lt;meta&gt; tag?",
+                options: [
+                    { text: "A) Define metadata about the HTML document", correct: true },
+                    { text: "B) Create a menu", correct: false },
+                    { text: "C) Link external stylesheets", correct: false },
+                    { text: "D) Define JavaScript code", correct: false }
+                ],
+                topic: "Meta Tags"
+            },
+            {
+                id: 6,
+                text: "Which CSS property is used to change the text color?",
+                options: [
+                    { text: "A) text-color", correct: false },
+                    { text: "B) color", correct: true },
+                    { text: "C) font-color", correct: false },
+                    { text: "D) text-style", correct: false }
+                ],
+                topic: "CSS Color"
+            },
+            {
+                id: 7,
+                text: "How do you select an element with id \"header\"?",
+                options: [
+                    { text: "A) .header", correct: false },
+                    { text: "B) #header", correct: true },
+                    { text: "C) header", correct: false },
+                    { text: "D) @header", correct: false }
+                ],
+                topic: "CSS ID Selector"
+            },
+            {
+                id: 8,
+                text: "What does CSS stand for?",
+                options: [
+                    { text: "A) Computer Style Sheets", correct: false },
+                    { text: "B) Cascading Style Sheets", correct: true },
+                    { text: "C) Creative Style Sheets", correct: false },
+                    { text: "D) Colorful Style Sheets", correct: false }
+                ],
+                topic: "CSS Definition"
+            },
+            {
+                id: 9,
+                text: "Which property is used to set the background color?",
+                options: [
+                    { text: "A) bgcolor", correct: false },
+                    { text: "B) background-color", correct: true },
+                    { text: "C) bg-color", correct: false },
+                    { text: "D) color-bg", correct: false }
+                ],
+                topic: "CSS Background"
+            },
+            {
+                id: 10,
+                text: "What is the default value of the position property?",
+                options: [
+                    { text: "A) relative", correct: false },
+                    { text: "B) fixed", correct: false },
+                    { text: "C) static", correct: true },
+                    { text: "D) absolute", correct: false }
+                ],
+                topic: "CSS Position"
+            },
+            {
+                id: 11,
+                text: "What does the \"box model\" consist of?",
+                options: [
+                    { text: "A) Border, Padding, Margin, Content", correct: true },
+                    { text: "B) Color, Size, Width, Height", correct: false },
+                    { text: "C) Display, Flex, Grid, Position", correct: false },
+                    { text: "D) Font, Text, Background, Border", correct: false }
+                ],
+                topic: "Box Model"
+            },
+            {
+                id: 12,
+                text: "Which property creates a flex container?",
+                options: [
+                    { text: "A) display: flex", correct: true },
+                    { text: "B) flex-container: true", correct: false },
+                    { text: "C) layout: flex", correct: false },
+                    { text: "D) container: flex", correct: false }
+                ],
+                topic: "Flexbox"
+            },
+            {
+                id: 13,
+                text: "What is the purpose of z-index?",
+                options: [
+                    { text: "A) Control horizontal positioning", correct: false },
+                    { text: "B) Control stacking order of elements", correct: true },
+                    { text: "C) Control opacity", correct: false },
+                    { text: "D) Control rotation", correct: false }
+                ],
+                topic: "Z-Index"
+            },
+            {
+                id: 14,
+                text: "Which CSS unit is relative to the font-size of the element itself?",
+                options: [
+                    { text: "A) px", correct: false },
+                    { text: "B) em", correct: true },
+                    { text: "C) cm", correct: false },
+                    { text: "D) pt", correct: false }
+                ],
+                topic: "CSS Units"
+            },
+            {
+                id: 15,
+                text: "What does `position: sticky` do?",
+                options: [
+                    { text: "A) Fixes element to the viewport", correct: false },
+                    { text: "B) Makes element sticky to cursor", correct: false },
+                    { text: "C) Allows element to stick during scroll until it reaches parent boundary", correct: true },
+                    { text: "D) Prevents element from moving", correct: false }
+                ],
+                topic: "Position Sticky"
+            },
+            {
+                id: 16,
+                text: "How do you declare a variable in JavaScript?",
+                options: [
+                    { text: "A) var, let, const", correct: true },
+                    { text: "B) variable, var, v", correct: false },
+                    { text: "C) define, let, const", correct: false },
+                    { text: "D) declare, var, let", correct: false }
+                ],
+                topic: "Variable Declaration"
+            },
+            {
+                id: 17,
+                text: "What will be the output?<div class='code-block'>console.log(typeof undefined)</div>",
+                options: [
+                    { text: "A) null", correct: false },
+                    { text: "B) undefined", correct: false },
+                    { text: "C) \"undefined\"", correct: true },
+                    { text: "D) object", correct: false }
+                ],
+                topic: "typeof undefined"
+            },
+            {
+                id: 18,
+                text: "Which method is used to add an element to the end of an array?",
+                options: [
+                    { text: "A) add()", correct: false },
+                    { text: "B) insert()", correct: false },
+                    { text: "C) push()", correct: true },
+                    { text: "D) append()", correct: false }
+                ],
+                topic: "Array Methods"
+            },
+            {
+                id: 19,
+                text: "What is the difference between `==` and `===`?",
+                options: [
+                    { text: "A) No difference", correct: false },
+                    { text: "B) `==` is faster", correct: false },
+                    { text: "C) `===` checks type and value, `==` only checks value", correct: true },
+                    { text: "D) `===` only checks type", correct: false }
+                ],
+                topic: "== vs ==="
+            },
+            {
+                id: 20,
+                text: "How do you create a function in JavaScript?",
+                options: [
+                    { text: "A) function myFunc() {}", correct: true },
+                    { text: "B) def myFunc() {}", correct: false },
+                    { text: "C) func myFunc() {}", correct: false },
+                    { text: "D) create myFunc() {}", correct: false }
+                ],
+                topic: "Function Declaration"
+            },
+            {
+                id: 21,
+                text: "What will be the output?<div class='code-block'>let x = 5;<br>let y = x;<br>y = 10;<br>console.log(x);</div>",
+                options: [
+                    { text: "A) 5", correct: true },
+                    { text: "B) 10", correct: false },
+                    { text: "C) undefined", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Variable Scope"
+            },
+            {
+                id: 22,
+                text: "What does `this` refer to in a regular function?",
+                options: [
+                    { text: "A) The function itself", correct: false },
+                    { text: "B) The global object (window in browsers)", correct: true },
+                    { text: "C) The parent object", correct: false },
+                    { text: "D) undefined", correct: false }
+                ],
+                topic: "this Keyword"
+            },
+            {
+                id: 23,
+                text: "What is a closure in JavaScript?",
+                options: [
+                    { text: "A) A function that closes", correct: false },
+                    { text: "B) A function that has access to another function's scope", correct: true },
+                    { text: "C) A loop that terminates", correct: false },
+                    { text: "D) A completed task", correct: false }
+                ],
+                topic: "Closures"
+            },
+            {
+                id: 24,
+                text: "What will be the output?<div class='code-block'>console.log([1, 2, 3].map(x => x * 2))</div>",
+                options: [
+                    { text: "A) [2, 4, 6]", correct: true },
+                    { text: "B) 12", correct: false },
+                    { text: "C) [1, 2, 3]", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Array Map"
+            },
+            {
+                id: 25,
+                text: "What is the purpose of `async/await`?",
+                options: [
+                    { text: "A) Wait for DOM elements", correct: false },
+                    { text: "B) Handle asynchronous operations more readably", correct: true },
+                    { text: "C) Create delays in code", correct: false },
+                    { text: "D) Synchronize variables", correct: false }
+                ],
+                topic: "Async/Await"
+            },
+            {
+                id: 26,
+                text: "How do you select an element by its class name?",
+                options: [
+                    { text: "A) document.getClass(\"className\")", correct: false },
+                    { text: "B) document.querySelector(\".className\")", correct: true },
+                    { text: "C) document.getElementByClass(\"className\")", correct: false },
+                    { text: "D) document.selectClass(\"className\")", correct: false }
+                ],
+                topic: "DOM Selector"
+            },
+            {
+                id: 27,
+                text: "What does `document.getElementById()` return?",
+                options: [
+                    { text: "A) Array of elements", correct: false },
+                    { text: "B) HTMLCollection", correct: false },
+                    { text: "C) Single element or null", correct: true },
+                    { text: "D) NodeList", correct: false }
+                ],
+                topic: "getElementById"
+            },
+            {
+                id: 28,
+                text: "How do you add an event listener to an element?",
+                options: [
+                    { text: "A) element.addEvent(\"click\", function)", correct: false },
+                    { text: "B) element.addEventListener(\"click\", function)", correct: true },
+                    { text: "C) element.onEvent(\"click\", function)", correct: false },
+                    { text: "D) element.attachEvent(\"click\", function)", correct: false }
+                ],
+                topic: "Event Listener"
+            },
+            {
+                id: 29,
+                text: "What will be printed?<div class='code-block'>const div = document.createElement(\"div\");<br>console.log(div.textContent);</div>",
+                options: [
+                    { text: "A) null", correct: false },
+                    { text: "B) undefined", correct: false },
+                    { text: "C) empty string", correct: true },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "DOM Creation"
+            },
+            {
+                id: 30,
+                text: "How do you remove an element from the DOM?",
+                options: [
+                    { text: "A) element.delete()", correct: false },
+                    { text: "B) element.remove()", correct: true },
+                    { text: "C) element.removeElement()", correct: false },
+                    { text: "D) document.remove(element)", correct: false }
+                ],
+                topic: "Remove Element"
+            },
+            {
+                id: 31,
+                text: "What is a React component?",
+                options: [
+                    { text: "A) A CSS class", correct: false },
+                    { text: "B) A reusable piece of UI", correct: true },
+                    { text: "C) A database table", correct: false },
+                    { text: "D) A server endpoint", correct: false }
+                ],
+                topic: "React Components"
+            },
+            {
+                id: 32,
+                text: "What is JSX?",
+                options: [
+                    { text: "A) A type of JavaScript", correct: false },
+                    { text: "B) A JavaScript syntax extension", correct: true },
+                    { text: "C) A CSS preprocessor", correct: false },
+                    { text: "D) A state management library", correct: false }
+                ],
+                topic: "JSX"
+            },
+            {
+                id: 33,
+                text: "What hook is used to manage state in functional components?",
+                options: [
+                    { text: "A) useEffect", correct: false },
+                    { text: "B) useState", correct: true },
+                    { text: "C) useReducer", correct: false },
+                    { text: "D) useContext", correct: false }
+                ],
+                topic: "useState Hook"
+            },
+            {
+                id: 34,
+                text: "What does `useEffect` do?",
+                options: [
+                    { text: "A) Apply CSS effects", correct: false },
+                    { text: "B) Create component effects", correct: false },
+                    { text: "C) Handle side effects in functional components", correct: true },
+                    { text: "D) Manage component state", correct: false }
+                ],
+                topic: "useEffect Hook"
+            },
+            {
+                id: 35,
+                text: "What is the difference between props and state?",
+                options: [
+                    { text: "A) No difference", correct: false },
+                    { text: "B) Props are mutable, state is immutable", correct: false },
+                    { text: "C) Props are immutable, state is mutable", correct: true },
+                    { text: "D) Props are for CSS, state is for JavaScript", correct: false }
+                ],
+                topic: "Props vs State"
+            },
+            {
+                id: 36,
+                text: "What will this component render?<div class='code-block'>function App() {<br>&nbsp;&nbsp;const [count, setCount] = React.useState(0);<br>&nbsp;&nbsp;return &lt;div&gt;{count}&lt;/div&gt;;<br>}</div>",
+                options: [
+                    { text: "A) count", correct: false },
+                    { text: "B) 0", correct: true },
+                    { text: "C) undefined", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "React State"
+            },
+            {
+                id: 37,
+                text: "What does `React.Fragment` do?",
+                options: [
+                    { text: "A) Fragments content", correct: false },
+                    { text: "B) Allows rendering multiple elements without a wrapper", correct: true },
+                    { text: "C) Creates a container", correct: false },
+                    { text: "D) Manages state", correct: false }
+                ],
+                topic: "React Fragment"
+            },
+            {
+                id: 38,
+                text: "How do you pass data from parent to child component?",
+                options: [
+                    { text: "A) Through state", correct: false },
+                    { text: "B) Through props", correct: true },
+                    { text: "C) Through context", correct: false },
+                    { text: "D) Through localStorage", correct: false }
+                ],
+                topic: "React Props"
+            },
+            {
+                id: 39,
+                text: "What is the virtual DOM?",
+                options: [
+                    { text: "A) A virtual reality environment", correct: false },
+                    { text: "B) An in-memory representation of the real DOM", correct: true },
+                    { text: "C) A type of database", correct: false },
+                    { text: "D) A CSS feature", correct: false }
+                ],
+                topic: "Virtual DOM"
+            },
+            {
+                id: 40,
+                text: "When does `useEffect` run by default?",
+                options: [
+                    { text: "A) Only on mount", correct: false },
+                    { text: "B) Only on unmount", correct: false },
+                    { text: "C) After every render", correct: true },
+                    { text: "D) Never", correct: false }
+                ],
+                topic: "useEffect Timing"
+            },
+            {
+                id: 41,
+                text: "What does `fetch()` return?",
+                options: [
+                    { text: "A) Array", correct: false },
+                    { text: "B) Promise", correct: true },
+                    { text: "C) Object", correct: false },
+                    { text: "D) String", correct: false }
+                ],
+                topic: "Fetch Return"
+            },
+            {
+                id: 42,
+                text: "How do you handle errors in fetch?",
+                options: [
+                    { text: "A) try-catch", correct: false },
+                    { text: "B) .catch() method", correct: false },
+                    { text: "C) Both A and B", correct: true },
+                    { text: "D) Neither", correct: false }
+                ],
+                topic: "Fetch Error Handling"
+            },
+            {
+                id: 43,
+                text: "What is a Promise?",
+                options: [
+                    { text: "A) A guarantee of execution", correct: false },
+                    { text: "B) An object that represents async operation completion", correct: true },
+                    { text: "C) A callback function", correct: false },
+                    { text: "D) A state variable", correct: false }
+                ],
+                topic: "Promise Definition"
+            },
+            {
+                id: 44,
+                text: "What does `JSON.stringify()` do?",
+                options: [
+                    { text: "A) Parse JSON", correct: false },
+                    { text: "B) Convert object to JSON string", correct: true },
+                    { text: "C) Validate JSON", correct: false },
+                    { text: "D) Convert string to object", correct: false }
+                ],
+                topic: "JSON stringify"
+            },
+            {
+                id: 45,
+                text: "What is localStorage used for?",
+                options: [
+                    { text: "A) Storing large files", correct: false },
+                    { text: "B) Storing client-side data persistently", correct: true },
+                    { text: "C) Storing passwords", correct: false },
+                    { text: "D) Caching API responses", correct: false }
+                ],
+                topic: "localStorage"
+            },
+            {
+                id: 46,
+                text: "What is a media query used for?",
+                options: [
+                    { text: "A) Playing media files", correct: false },
+                    { text: "B) Querying media servers", correct: false },
+                    { text: "C) Making designs responsive", correct: true },
+                    { text: "D) Storing media", correct: false }
+                ],
+                topic: "Media Queries"
+            },
+            {
+                id: 47,
+                text: "Which is correct mobile-first CSS?",
+                options: [
+                    { text: "A) Write desktop styles first", correct: false },
+                    { text: "B) Write mobile styles first, then add media queries", correct: true },
+                    { text: "C) Use only one breakpoint", correct: false },
+                    { text: "D) Ignore mobile design", correct: false }
+                ],
+                topic: "Mobile-First"
+            },
+            {
+                id: 48,
+                text: "What does `viewport` meta tag do?",
+                options: [
+                    { text: "A) Creates a view", correct: false },
+                    { text: "B) Controls how webpage is rendered on mobile", correct: true },
+                    { text: "C) Sets page background", correct: false },
+                    { text: "D) Defines navigation", correct: false }
+                ],
+                topic: "Viewport Meta"
+            },
+            {
+                id: 49,
+                text: "What is CSS Grid used for?",
+                options: [
+                    { text: "A) Creating only columns", correct: false },
+                    { text: "B) Creating only rows", correct: false },
+                    { text: "C) Creating 2D layouts", correct: true },
+                    { text: "D) Creating only flex layouts", correct: false }
+                ],
+                topic: "CSS Grid"
+            },
+            {
+                id: 50,
+                text: "What is a breakpoint in responsive design?",
+                options: [
+                    { text: "A) A break in the code", correct: false },
+                    { text: "B) A screen width where layout changes", correct: true },
+                    { text: "C) A pause in animation", correct: false },
+                    { text: "D) A database break", correct: false }
+                ],
+                topic: "Breakpoints"
+            },
+            {
+                id: 51,
+                text: "What is lazy loading?",
+                options: [
+                    { text: "A) Slow loading", correct: false },
+                    { text: "B) Loading resources only when needed", correct: true },
+                    { text: "C) Loading in background", correct: false },
+                    { text: "D) Not loading resources", correct: false }
+                ],
+                topic: "Lazy Loading"
+            },
+            {
+                id: 52,
+                text: "What is debouncing used for?",
+                options: [
+                    { text: "A) Removing code", correct: false },
+                    { text: "B) Limiting function calls on repeated events", correct: true },
+                    { text: "C) Speeding up code", correct: false },
+                    { text: "D) Organizing imports", correct: false }
+                ],
+                topic: "Debouncing"
+            },
+            {
+                id: 53,
+                text: "What does minification do?",
+                options: [
+                    { text: "A) Reduces file size", correct: true },
+                    { text: "B) Adds comments", correct: false },
+                    { text: "C) Validates code", correct: false },
+                    { text: "D) Optimizes logic", correct: false }
+                ],
+                topic: "Minification"
+            },
+            {
+                id: 54,
+                text: "What is a SPA (Single Page Application)?",
+                options: [
+                    { text: "A) A simple page", correct: false },
+                    { text: "B) An application that doesn't reload pages", correct: true },
+                    { text: "C) A static page", correct: false },
+                    { text: "D) A multi-page application", correct: false }
+                ],
+                topic: "SPA"
+            },
+            {
+                id: 55,
+                text: "What is the purpose of CSS sprites?",
+                options: [
+                    { text: "A) Animate sprites", correct: false },
+                    { text: "B) Combine multiple images into one", correct: true },
+                    { text: "C) Create sprite effects", correct: false },
+                    { text: "D) Remove images", correct: false }
+                ],
+                topic: "CSS Sprites"
+            },
+            {
+                id: 56,
+                text: "What is CORS?",
+                options: [
+                    { text: "A) A programming language", correct: false },
+                    { text: "B) Cross-Origin Resource Sharing", correct: true },
+                    { text: "C) A CSS property", correct: false },
+                    { text: "D) A JavaScript framework", correct: false }
+                ],
+                topic: "CORS"
+            },
+            {
+                id: 57,
+                text: "What does the `display: none` property do?",
+                options: [
+                    { text: "A) Hides element but reserves space", correct: false },
+                    { text: "B) Hides element and removes space", correct: true },
+                    { text: "C) Shows element", correct: false },
+                    { text: "D) Disables element", correct: false }
+                ],
+                topic: "display: none"
+            },
+            {
+                id: 58,
+                text: "What is the difference between `display: none` and `visibility: hidden`?",
+                options: [
+                    { text: "A) No difference", correct: false },
+                    { text: "B) `visibility: hidden` reserves space, `display: none` doesn't", correct: true },
+                    { text: "C) `display: none` reserves space, `visibility: hidden` doesn't", correct: false },
+                    { text: "D) `visibility: hidden` removes element", correct: false }
+                ],
+                topic: "display vs visibility"
+            },
+            {
+                id: 59,
+                text: "What is a Web Worker?",
+                options: [
+                    { text: "A) A person working on web", correct: false },
+                    { text: "B) A script running in background thread", correct: true },
+                    { text: "C) A web browser", correct: false },
+                    { text: "D) A server worker", correct: false }
+                ],
+                topic: "Web Worker"
+            },
+            {
+                id: 60,
+                text: "What does `preventDefault()` do?",
+                options: [
+                    { text: "A) Prevents page rendering", correct: false },
+                    { text: "B) Prevents default action of an event", correct: true },
+                    { text: "C) Prevents function execution", correct: false },
+                    { text: "D) Prevents variable assignment", correct: false }
+                ],
+                topic: "preventDefault"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        const totalQuestions = questions.length;
+        const passingPercentage = 70;
+        const passingScore = Math.ceil((totalQuestions * passingPercentage) / 100);
+
+        function startQuiz() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const question = questions[currentQuestionIndex];
+            const container = document.getElementById('questionsContainer');
+
+            let optionsHTML = '<div class="options">';
+            question.options.forEach((option, index) => {
+                const isChecked = userAnswers[question.id] === index ? 'checked' : '';
+                optionsHTML += `
+                    <div class="option ${isChecked ? 'selected' : ''}">
+                        <label>
+                            <input type="radio" name="option" value="${index}" ${isChecked}
+                                   onchange="selectAnswer(${question.id}, ${index})">
+                            ${option.text}
+                        </label>
+                    </div>
+                `;
+            });
+            optionsHTML += '</div>';
+
+            container.innerHTML = `
+                <div class="question-container active">
+                    <div class="question-number">Question ${currentQuestionIndex + 1} of ${totalQuestions}</div>
+                    <div class="question-text">${question.text}</div>
+                    ${optionsHTML}
+                </div>
+            `;
+
+            updateButtons();
+            updateProgress();
+        }
+
+        function selectAnswer(questionId, optionIndex) {
+            userAnswers[questionId] = optionIndex;
+
+            // Update visual selection
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            document.getElementById('answeredCount').textContent = answered;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+
+            const percentage = Math.round((answered / totalQuestions) * 100);
+            document.getElementById('progressFill').style.width = percentage + '%';
+
+            // Calculate and show score preview
+            let correct = 0;
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    if (q.options[userAnswers[q.id]].correct) {
+                        correct++;
+                    }
+                }
+            });
+
+            const scorePercentage = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+            document.getElementById('scorePreview').textContent = scorePercentage + '%';
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = currentQuestionIndex === 0;
+
+            if (currentQuestionIndex === totalQuestions - 1) {
+                nextBtn.textContent = 'Submit';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultScreen').classList.add('show');
+
+            let correct = 0;
+            let incorrect = 0;
+
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    if (q.options[userAnswers[q.id]].correct) {
+                        correct++;
+                    } else {
+                        incorrect++;
+                    }
+                }
+            });
+
+            const unanswered = totalQuestions - correct - incorrect;
+            const totalAnswered = correct + incorrect;
+            const percentage = totalAnswered > 0 ? Math.round((correct / totalAnswered) * 100) : 0;
+            const passed = percentage >= passingPercentage;
+
+            // Store result in localStorage for dashboard
+            const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
+            results.push({
+                examId: 'frontend',
+                score: percentage,
+                correct: correct,
+                total: totalAnswered,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('quizResults', JSON.stringify(results));
+
+            document.getElementById('scoreDisplay').innerHTML = `${percentage}%`;
+            document.getElementById('scoreDisplay').className = `score-display ${passed ? 'pass' : 'fail'}`;
+
+            document.getElementById('resultStatus').innerHTML = passed
+                ? `<span class="pass">✓ PASSED</span>`
+                : `<span class="fail">✗ FAILED</span>`;
+            document.getElementById('resultStatus').className = `result-status ${passed ? 'pass' : 'fail'}`;
+
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('wrongCount').textContent = incorrect + unanswered;
+
+            // Answer Review
+            let reviewHTML = '';
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    const selectedIndex = userAnswers[q.id];
+                    const isCorrect = q.options[selectedIndex].correct;
+                    const userAnswer = q.options[selectedIndex].text;
+                    const correctAnswer = q.options.find(opt => opt.correct).text;
+
+                    reviewHTML += `
+                        <div class="answer-item ${isCorrect ? 'correct' : 'incorrect'}">
+                            <div class="answer-item-text">Q${q.id}: ${q.text.substring(0, 50)}...</div>
+                            <div class="answer-item-detail">
+                                Your answer: ${userAnswer}<br>
+                                ${!isCorrect ? `Correct answer: ${correctAnswer}` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('answerReview').innerHTML = reviewHTML;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

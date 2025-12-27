@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Basics MCQ Exam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #19A26C;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .quiz-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .info-box {
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .info-box h3 {
+            color: #19A26C;
+            font-size: 14px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .info-box p {
+            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #19A26C 0%, #148A5A 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .question-number {
+            color: #19A26C;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border-left: 4px solid #19A26C;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .option:hover {
+            border-color: #19A26C;
+            background: #f9f9f9;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .option label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .option.selected {
+            border-color: #19A26C;
+            background: #eff6ff;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #19A26C 0%, #148A5A 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .result-container {
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .pass {
+            color: #4caf50;
+        }
+
+        .fail {
+            color: #f44336;
+        }
+
+        .result-status {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 4px solid #19A26C;
+        }
+
+        .stat-card.correct {
+            border-top-color: #4caf50;
+        }
+
+        .stat-card.incorrect {
+            border-top-color: #f44336;
+        }
+
+        .stat-card.passing {
+            border-top-color: #2196f3;
+        }
+
+        .stat-card h4 {
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: #333;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .answer-review {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .answer-review h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .answer-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #e0e0e0;
+            font-size: 13px;
+        }
+
+        .answer-item.correct {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        .answer-item.incorrect {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+
+        .answer-item-text {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .answer-item-detail {
+            color: #666;
+        }
+
+        .correct-text {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .incorrect-text {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .start-screen p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .start-screen .rules {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .start-screen .rules h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .start-screen .rules ul {
+            margin-left: 20px;
+        }
+
+        .start-screen .rules li {
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .quiz-info {
+                flex-direction: column;
+            }
+
+            .info-box {
+                margin: 5px 0;
+            }
+
+            .result-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .question-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div id="startScreen" class="start-screen">
+            <div class="header">
+                <h1>Python Basics MCQ Exam</h1>
+                <p>Test Your Python Knowledge</p>
+            </div>
+
+            <h2>Welcome to the Quiz!</h2>
+            <p>This exam covers all fundamental Python concepts including variables, data types, collections, operators, control flow, functions, strings, list comprehensions, exception handling, OOP, modules, and advanced concepts.</p>
+
+            <div class="rules">
+                <h3>Exam Details:</h3>
+                <ul>
+                    <li><strong>Total Questions:</strong> 60</li>
+                    <li><strong>Time Limit:</strong> No time limit</li>
+                    <li><strong>Passing Score:</strong> 70% (42/60 correct)</li>
+                    <li><strong>Topics:</strong> Variables, Data Types, Collections, Operators, Control Flow, Functions, Strings, OOP</li>
+                    <li><strong>Difficulty:</strong> Beginner to Intermediate</li>
+                </ul>
+            </div>
+
+            <button class="btn-primary" onclick="startQuiz()" style="width: 200px; margin: 0 auto; display: block;">Start Quiz</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quizScreen" style="display: none;">
+            <div class="header">
+                <h1>Python Basics MCQ Exam</h1>
+            </div>
+
+            <div class="quiz-info">
+                <div class="info-box">
+                    <h3>Question</h3>
+                    <p><span id="currentQuestion">1</span>/60</p>
+                </div>
+                <div class="info-box">
+                    <h3>Answered</h3>
+                    <p id="answeredCount">0</p>
+                </div>
+                <div class="info-box">
+                    <h3>Score</h3>
+                    <p id="scorePreview">0%</p>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <div class="button-group">
+                <button class="btn-secondary" id="prevBtn" onclick="previousQuestion()">Previous</button>
+                <button class="btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultScreen" class="result-container">
+            <div class="result-header">
+                <h2>Quiz Results</h2>
+                <div class="score-display" id="scoreDisplay"></div>
+                <div class="result-status" id="resultStatus"></div>
+            </div>
+
+            <div class="result-stats">
+                <div class="stat-card correct">
+                    <h4>Correct Answers</h4>
+                    <p id="correctCount">0</p>
+                </div>
+                <div class="stat-card incorrect">
+                    <h4>Wrong Answers</h4>
+                    <p id="wrongCount">0</p>
+                </div>
+                <div class="stat-card passing">
+                    <h4>Passing Marks</h4>
+                    <p>70%</p>
+                </div>
+            </div>
+
+            <div class="answer-review">
+                <h3>Answer Review</h3>
+                <div id="answerReview"></div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-secondary" onclick="window.location.href='dashboard-index.html'">📊 Back to Dashboard</button>
+                <button class="btn-primary" onclick="location.reload()">🔄 Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz Questions Data
+        const questions = [
+            {
+                id: 1,
+                text: "What is the output of the following code?<div class='code-block'>x = 10<br>y = \"10\"<br>print(x + y)</div>",
+                options: [
+                    { text: "A) 20", correct: false },
+                    { text: "B) 1010", correct: false },
+                    { text: "C) TypeError", correct: true },
+                    { text: "D) \"20\"", correct: false }
+                ],
+                topic: "Variables & Type Mismatch"
+            },
+            {
+                id: 2,
+                text: "Which of the following is a mutable data type in Python?",
+                options: [
+                    { text: "A) Tuple", correct: false },
+                    { text: "B) String", correct: false },
+                    { text: "C) List", correct: true },
+                    { text: "D) Integer", correct: false }
+                ],
+                topic: "Mutable vs Immutable"
+            },
+            {
+                id: 3,
+                text: "What will be the type of the variable `result` after this assignment?<div class='code-block'>result = 5 + 2.5</div>",
+                options: [
+                    { text: "A) int", correct: false },
+                    { text: "B) float", correct: true },
+                    { text: "C) complex", correct: false },
+                    { text: "D) string", correct: false }
+                ],
+                topic: "Type Coercion"
+            },
+            {
+                id: 4,
+                text: "Which statement correctly creates a tuple with a single element?",
+                options: [
+                    { text: "A) `single = (5)`", correct: false },
+                    { text: "B) `single = (5,)`", correct: true },
+                    { text: "C) `single = [5]`", correct: false },
+                    { text: "D) `single = {5}`", correct: false }
+                ],
+                topic: "Tuple Creation"
+            },
+            {
+                id: 5,
+                text: "What is the output of the following code?<div class='code-block'>x = None<br>print(type(x))</div>",
+                options: [
+                    { text: "A) NoneType", correct: false },
+                    { text: "B) null", correct: false },
+                    { text: "C) &lt;class 'NoneType'&gt;", correct: true },
+                    { text: "D) undefined", correct: false }
+                ],
+                topic: "NoneType"
+            },
+            {
+                id: 6,
+                text: "What will be the output of the following code?<div class='code-block'>lst = [1, 2, 3, 4, 5]<br>print(lst[-2])</div>",
+                options: [
+                    { text: "A) 2", correct: false },
+                    { text: "B) 4", correct: true },
+                    { text: "C) 5", correct: false },
+                    { text: "D) IndexError", correct: false }
+                ],
+                topic: "List Indexing (Negative)"
+            },
+            {
+                id: 7,
+                text: "Which method would you use to remove the last item from a list?",
+                options: [
+                    { text: "A) `list.delete()`", correct: false },
+                    { text: "B) `list.pop()`", correct: true },
+                    { text: "C) `list.remove()`", correct: false },
+                    { text: "D) `list.discard()`", correct: false }
+                ],
+                topic: "List Methods"
+            },
+            {
+                id: 8,
+                text: "What is the output of this code?<div class='code-block'>d = {\"name\": \"Alice\", \"age\": 25}<br>print(d.get(\"city\", \"Not Found\"))</div>",
+                options: [
+                    { text: "A) KeyError", correct: false },
+                    { text: "B) None", correct: false },
+                    { text: "C) \"Not Found\"", correct: true },
+                    { text: "D) \"city\"", correct: false }
+                ],
+                topic: "Dictionary get() Method"
+            },
+            {
+                id: 9,
+                text: "Which of the following will create a set with no duplicates?<div class='code-block'>s = {1, 2, 2, 3, 3, 3}</div>",
+                options: [
+                    { text: "A) {1, 2, 2, 3, 3, 3}", correct: false },
+                    { text: "B) {1, 2, 3}", correct: true },
+                    { text: "C) [1, 2, 3]", correct: false },
+                    { text: "D) It will throw an error", correct: false }
+                ],
+                topic: "Set Uniqueness"
+            },
+            {
+                id: 10,
+                text: "What is the difference between a list and a tuple?",
+                options: [
+                    { text: "A) Lists are ordered, tuples are unordered", correct: false },
+                    { text: "B) Lists are immutable, tuples are mutable", correct: false },
+                    { text: "C) Lists are mutable, tuples are immutable", correct: true },
+                    { text: "D) There is no difference", correct: false }
+                ],
+                topic: "Lists vs Tuples"
+            },
+            {
+                id: 11,
+                text: "What is the output of the following code?<div class='code-block'>print(10 // 3)</div>",
+                options: [
+                    { text: "A) 3.333...", correct: false },
+                    { text: "B) 3", correct: true },
+                    { text: "C) 3.0", correct: false },
+                    { text: "D) 4", correct: false }
+                ],
+                topic: "Floor Division"
+            },
+            {
+                id: 12,
+                text: "What will be the result of this expression?<div class='code-block'>print(2 ** 3 ** 2)</div>",
+                options: [
+                    { text: "A) 512", correct: true },
+                    { text: "B) 64", correct: false },
+                    { text: "C) 8", correct: false },
+                    { text: "D) 256", correct: false }
+                ],
+                topic: "Exponentiation (Right Associative)"
+            },
+            {
+                id: 13,
+                text: "What is the output of the following code?<div class='code-block'>x = 5<br>print(x > 3 and x < 10)</div>",
+                options: [
+                    { text: "A) True", correct: true },
+                    { text: "B) False", correct: false },
+                    { text: "C) 5", correct: false },
+                    { text: "D) None", correct: false }
+                ],
+                topic: "Logical AND Operator"
+            },
+            {
+                id: 14,
+                text: "Which operator is used for exponentiation in Python?",
+                options: [
+                    { text: "A) `^`", correct: false },
+                    { text: "B) `**`", correct: false },
+                    { text: "C) `pow`", correct: false },
+                    { text: "D) Both B and C", correct: true }
+                ],
+                topic: "Exponentiation Operator"
+            },
+            {
+                id: 15,
+                text: "What will be the value of `x` after this operation?<div class='code-block'>x = 10<br>x //= 3</div>",
+                options: [
+                    { text: "A) 3.333...", correct: false },
+                    { text: "B) 3", correct: true },
+                    { text: "C) 10", correct: false },
+                    { text: "D) 3.0", correct: false }
+                ],
+                topic: "Floor Division Assignment"
+            },
+            {
+                id: 16,
+                text: "What will be the output of the following code?<div class='code-block'>for i in range(3):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")</div>",
+                options: [
+                    { text: "A) 0 1 2 3", correct: false },
+                    { text: "B) 0 1 2", correct: true },
+                    { text: "C) 1 2 3", correct: false },
+                    { text: "D) Nothing (Error)", correct: false }
+                ],
+                topic: "range() and for loop"
+            },
+            {
+                id: 17,
+                text: "What is the output of the following code?<div class='code-block'>for i in range(5):<br>&nbsp;&nbsp;&nbsp;&nbsp;if i == 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")</div>",
+                options: [
+                    { text: "A) 0 1 2 3 4", correct: false },
+                    { text: "B) 0 1 2 4", correct: true },
+                    { text: "C) 1 2 3 4", correct: false },
+                    { text: "D) 0 1 2", correct: false }
+                ],
+                topic: "continue Statement"
+            },
+            {
+                id: 18,
+                text: "What will be printed?<div class='code-block'>count = 0<br>while count < 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Hello\")<br>&nbsp;&nbsp;&nbsp;&nbsp;count += 1</div>",
+                options: [
+                    { text: "A) \"Hello\" printed once", correct: false },
+                    { text: "B) \"Hello\" printed twice", correct: false },
+                    { text: "C) \"Hello\" printed three times", correct: true },
+                    { text: "D) Infinite loop", correct: false }
+                ],
+                topic: "while Loop"
+            },
+            {
+                id: 19,
+                text: "What is the output of the following code?<div class='code-block'>x = 10<br>if x > 5:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Greater\")<br>elif x == 5:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Equal\")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Lesser\")</div>",
+                options: [
+                    { text: "A) Greater", correct: true },
+                    { text: "B) Equal", correct: false },
+                    { text: "C) Lesser", correct: false },
+                    { text: "D) Nothing", correct: false }
+                ],
+                topic: "if-elif-else"
+            },
+            {
+                id: 20,
+                text: "What does the `enumerate()` function do?",
+                options: [
+                    { text: "A) Counts total elements", correct: false },
+                    { text: "B) Returns index and value in each iteration", correct: true },
+                    { text: "C) Sorts a list", correct: false },
+                    { text: "D) Removes duplicates", correct: false }
+                ],
+                topic: "enumerate() Function"
+            },
+            {
+                id: 21,
+                text: "What is the output of the following code?<div class='code-block'>def greet(name=\"World\"):<br>&nbsp;&nbsp;&nbsp;&nbsp;return f\"Hello, {name}!\"<br><br>print(greet())</div>",
+                options: [
+                    { text: "A) Hello, World!", correct: true },
+                    { text: "B) Hello, name!", correct: false },
+                    { text: "C) Error", correct: false },
+                    { text: "D) Hello,!", correct: false }
+                ],
+                topic: "Default Parameters"
+            },
+            {
+                id: 22,
+                text: "What will be the output?<div class='code-block'>text = \"Python\"<br>print(text.lower())</div>",
+                options: [
+                    { text: "A) PYTHON", correct: false },
+                    { text: "B) python", correct: true },
+                    { text: "C) Python", correct: false },
+                    { text: "D) pYTHON", correct: false }
+                ],
+                topic: "String lower() Method"
+            },
+            {
+                id: 23,
+                text: "What is the output of this code?<div class='code-block'>s = \"hello,world\"<br>result = s.split(\",\")<br>print(result)</div>",
+                options: [
+                    { text: "A) \"hello,world\"", correct: false },
+                    { text: "B) [\"hello\", \"world\"]", correct: true },
+                    { text: "C) (\"hello\", \"world\")", correct: false },
+                    { text: "D) \"hello\" \"world\"", correct: false }
+                ],
+                topic: "String split() Method"
+            },
+            {
+                id: 24,
+                text: "What does the following code do?<div class='code-block'>def sum_numbers(*args):<br>&nbsp;&nbsp;&nbsp;&nbsp;return sum(args)<br><br>print(sum_numbers(1, 2, 3, 4))</div>",
+                options: [
+                    { text: "A) Takes only 4 arguments", correct: false },
+                    { text: "B) Takes variable number of positional arguments", correct: true },
+                    { text: "C) Takes keyword arguments only", correct: false },
+                    { text: "D) Causes an error", correct: false }
+                ],
+                topic: "*args (Variable Arguments)"
+            },
+            {
+                id: 25,
+                text: "What is the output?<div class='code-block'>name = \"Alice\"<br>age = 25<br>print(f\"Name: {name}, Age: {age}\")</div>",
+                options: [
+                    { text: "A) Name: {name}, Age: {age}", correct: false },
+                    { text: "B) Name: Alice, Age: 25", correct: true },
+                    { text: "C) Name: name, Age: age", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "f-strings"
+            },
+            {
+                id: 26,
+                text: "What does this list comprehension produce?<div class='code-block'>squares = [x**2 for x in range(5)]<br>print(squares)</div>",
+                options: [
+                    { text: "A) [1, 4, 9, 16, 25]", correct: false },
+                    { text: "B) [0, 1, 4, 9, 16]", correct: true },
+                    { text: "C) [0, 1, 2, 3, 4]", correct: false },
+                    { text: "D) [0, 1, 2, 3, 4, 5]", correct: false }
+                ],
+                topic: "List Comprehension"
+            },
+            {
+                id: 27,
+                text: "What will be the output?<div class='code-block'>try:<br>&nbsp;&nbsp;&nbsp;&nbsp;result = 10 / 0<br>except ZeroDivisionError:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Cannot divide by zero!\")<br>except:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Other error\")</div>",
+                options: [
+                    { text: "A) Cannot divide by zero!", correct: true },
+                    { text: "B) Other error", correct: false },
+                    { text: "C) 10", correct: false },
+                    { text: "D) ZeroDivisionError", correct: false }
+                ],
+                topic: "Exception Handling"
+            },
+            {
+                id: 28,
+                text: "What is the output of this code?<div class='code-block'>try:<br>&nbsp;&nbsp;&nbsp;&nbsp;x = int(\"abc\")<br>except ValueError as e:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Value error caught\")<br>finally:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Finally block\")</div>",
+                options: [
+                    { text: "A) Value error caught", correct: false },
+                    { text: "B) Finally block", correct: false },
+                    { text: "C) Value error caught, Finally block (on separate lines)", correct: true },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "try-except-finally"
+            },
+            {
+                id: 29,
+                text: "What is the output of the following code?<div class='code-block'>class Dog:<br>&nbsp;&nbsp;&nbsp;&nbsp;species = \"Canis familiaris\"<br><br>&nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, name):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.name = name<br><br>dog = Dog(\"Buddy\")<br>print(dog.name)</div>",
+                options: [
+                    { text: "A) Dog", correct: false },
+                    { text: "B) Buddy", correct: true },
+                    { text: "C) Canis familiaris", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Class Instance Variables"
+            },
+            {
+                id: 30,
+                text: "In OOP, what does inheritance allow you to do?",
+                options: [
+                    { text: "A) Create new classes based on existing classes", correct: true },
+                    { text: "B) Hide internal details", correct: false },
+                    { text: "C) Bundle data and methods together", correct: false },
+                    { text: "D) Create multiple objects from a class", correct: false }
+                ],
+                topic: "Inheritance Definition"
+            },
+            {
+                id: 31,
+                text: "What is the output of the following code?<div class='code-block'>x = 5<br>y = 2<br>print(x / y)</div>",
+                options: [
+                    { text: "A) 2", correct: false },
+                    { text: "B) 2.5", correct: true },
+                    { text: "C) 2.0", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Division & Float"
+            },
+            {
+                id: 32,
+                text: "What will be printed?<div class='code-block'>lst = [10, 20, 30, 40]<br>print(lst[0:2])</div>",
+                options: [
+                    { text: "A) [10, 20]", correct: true },
+                    { text: "B) [10, 20, 30]", correct: false },
+                    { text: "C) [20, 30]", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "List Slicing"
+            },
+            {
+                id: 33,
+                text: "What is the output of this code?<div class='code-block'>text = \"Hello\"<br>print(text[1:4])</div>",
+                options: [
+                    { text: "A) Hell", correct: false },
+                    { text: "B) Hel", correct: false },
+                    { text: "C) ell", correct: true },
+                    { text: "D) ello", correct: false }
+                ],
+                topic: "String Slicing"
+            },
+            {
+                id: 34,
+                text: "What will be the result?<div class='code-block'>numbers = [1, 2, 3]<br>numbers += [4, 5]<br>print(numbers)</div>",
+                options: [
+                    { text: "A) [1, 2, 3, [4, 5]]", correct: false },
+                    { text: "B) [1, 2, 3, 4, 5]", correct: true },
+                    { text: "C) Error", correct: false },
+                    { text: "D) [4, 5]", correct: false }
+                ],
+                topic: "List Operations"
+            },
+            {
+                id: 35,
+                text: "What is the output of the following code?<div class='code-block'>a = 10<br>b = 20<br>a, b = b, a<br>print(a, b)</div>",
+                options: [
+                    { text: "A) 10 20", correct: false },
+                    { text: "B) 20 10", correct: true },
+                    { text: "C) Error", correct: false },
+                    { text: "D) 20 20", correct: false }
+                ],
+                topic: "Variable Swapping"
+            },
+            {
+                id: 36,
+                text: "What will be printed?<div class='code-block'>x = \"3\"<br>y = 2<br>print(x * y)</div>",
+                options: [
+                    { text: "A) 5", correct: false },
+                    { text: "B) 6", correct: false },
+                    { text: "C) \"33\"", correct: true },
+                    { text: "D) \"32\"", correct: false }
+                ],
+                topic: "String Multiplication"
+            },
+            {
+                id: 37,
+                text: "What is the output of this code?<div class='code-block'>my_dict = {\"a\": 1, \"b\": 2}<br>print(\"a\" in my_dict)</div>",
+                options: [
+                    { text: "A) True", correct: true },
+                    { text: "B) False", correct: false },
+                    { text: "C) 1", correct: false },
+                    { text: "D) \"a\"", correct: false }
+                ],
+                topic: "Dict Membership"
+            },
+            {
+                id: 38,
+                text: "What will be the output?<div class='code-block'>nums = [1, 2, 3, 4, 5]<br>print(max(nums))</div>",
+                options: [
+                    { text: "A) [1, 2, 3, 4, 5]", correct: false },
+                    { text: "B) 5", correct: true },
+                    { text: "C) 0", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "max() Function"
+            },
+            {
+                id: 39,
+                text: "What is the output of the following code?<div class='code-block'>s = \"Python\"<br>print(len(s))</div>",
+                options: [
+                    { text: "A) 5", correct: false },
+                    { text: "B) 6", correct: true },
+                    { text: "C) 7", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "len() Function"
+            },
+            {
+                id: 40,
+                text: "What will be printed?<div class='code-block'>x = [1, 2, 3]<br>y = x<br>y.append(4)<br>print(x)</div>",
+                options: [
+                    { text: "A) [1, 2, 3]", correct: false },
+                    { text: "B) [1, 2, 3, 4]", correct: true },
+                    { text: "C) Error", correct: false },
+                    { text: "D) [4]", correct: false }
+                ],
+                topic: "List Reference"
+            },
+            {
+                id: 41,
+                text: "What is the output of the following code?<div class='code-block'>for i in range(2, 8, 2):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(i, end=\" \")</div>",
+                options: [
+                    { text: "A) 2 4 6 8", correct: false },
+                    { text: "B) 2 4 6", correct: true },
+                    { text: "C) 0 2 4 6", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Range with Step"
+            },
+            {
+                id: 42,
+                text: "What will be printed?<div class='code-block'>x = 0<br>while x < 5:<br>&nbsp;&nbsp;&nbsp;&nbsp;if x == 2:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x += 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue<br>&nbsp;&nbsp;&nbsp;&nbsp;print(x, end=\" \")<br>&nbsp;&nbsp;&nbsp;&nbsp;x += 1</div>",
+                options: [
+                    { text: "A) 0 1 2 3 4", correct: false },
+                    { text: "B) 0 1 3 4", correct: true },
+                    { text: "C) 0 1 3 4 5", correct: false },
+                    { text: "D) Infinite loop", correct: false }
+                ],
+                topic: "While & Continue"
+            },
+            {
+                id: 43,
+                text: "What is the output of this code?<div class='code-block'>for i in [1, 2, 3]:<br>&nbsp;&nbsp;&nbsp;&nbsp;for j in [10, 20]:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f\"{i}-{j} \", end=\"\")</div>",
+                options: [
+                    { text: "A) 1-10 1-20 2-10 2-20 3-10 3-20", correct: true },
+                    { text: "B) 1-10 2-20 3-30", correct: false },
+                    { text: "C) Error", correct: false },
+                    { text: "D) 1 2 3 10 20", correct: false }
+                ],
+                topic: "Nested Loops"
+            },
+            {
+                id: 44,
+                text: "What will be the output?<div class='code-block'>x = 1<br>while x <= 3:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(x)<br>&nbsp;&nbsp;&nbsp;&nbsp;x += 1</div>",
+                options: [
+                    { text: "A) 1 2 3", correct: false },
+                    { text: "B) 1<br>2<br>3", correct: true },
+                    { text: "C) 0 1 2 3", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "While Loop Output"
+            },
+            {
+                id: 45,
+                text: "What is the output of the following code?<div class='code-block'>condition = True<br>if condition:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"Yes\")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print(\"No\")</div>",
+                options: [
+                    { text: "A) Yes", correct: true },
+                    { text: "B) No", correct: false },
+                    { text: "C) True", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "If Condition"
+            },
+            {
+                id: 46,
+                text: "What will be printed?<div class='code-block'>def calculate(x, y=10):<br>&nbsp;&nbsp;&nbsp;&nbsp;return x + y<br><br>print(calculate(5))</div>",
+                options: [
+                    { text: "A) 5", correct: false },
+                    { text: "B) 10", correct: false },
+                    { text: "C) 15", correct: true },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Default Parameters"
+            },
+            {
+                id: 47,
+                text: "What is the output of this code?<div class='code-block'>def func():<br>&nbsp;&nbsp;&nbsp;&nbsp;return \"Hello\", \"World\"<br><br>result = func()<br>print(type(result))</div>",
+                options: [
+                    { text: "A) str", correct: false },
+                    { text: "B) tuple", correct: true },
+                    { text: "C) list", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Return Tuple"
+            },
+            {
+                id: 48,
+                text: "What will be the output?<div class='code-block'>def modify_list(lst):<br>&nbsp;&nbsp;&nbsp;&nbsp;lst.append(4)<br>&nbsp;&nbsp;&nbsp;&nbsp;return lst<br><br>my_list = [1, 2, 3]<br>result = modify_list(my_list)<br>print(my_list)</div>",
+                options: [
+                    { text: "A) [1, 2, 3]", correct: false },
+                    { text: "B) [1, 2, 3, 4]", correct: true },
+                    { text: "C) Error", correct: false },
+                    { text: "D) [4]", correct: false }
+                ],
+                topic: "List Mutation"
+            },
+            {
+                id: 49,
+                text: "What is the output of the following code?<div class='code-block'>def check(n):<br>&nbsp;&nbsp;&nbsp;&nbsp;if n > 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return \"Positive\"<br>&nbsp;&nbsp;&nbsp;&nbsp;elif n < 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return \"Negative\"<br>&nbsp;&nbsp;&nbsp;&nbsp;else:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return \"Zero\"<br><br>print(check(0))</div>",
+                options: [
+                    { text: "A) Positive", correct: false },
+                    { text: "B) Negative", correct: false },
+                    { text: "C) Zero", correct: true },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Multiple Returns"
+            },
+            {
+                id: 50,
+                text: "What will be printed?<div class='code-block'>def outer(x):<br>&nbsp;&nbsp;&nbsp;&nbsp;def inner(y):<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return x + y<br>&nbsp;&nbsp;&nbsp;&nbsp;return inner(5)<br><br>print(outer(10))</div>",
+                options: [
+                    { text: "A) 10", correct: false },
+                    { text: "B) 15", correct: true },
+                    { text: "C) 5", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Nested Functions"
+            },
+            {
+                id: 51,
+                text: "What is the output of the following code?<div class='code-block'>text = \"python\"<br>print(text.title())</div>",
+                options: [
+                    { text: "A) PYTHON", correct: false },
+                    { text: "B) Python", correct: true },
+                    { text: "C) python", correct: false },
+                    { text: "D) pYTHON", correct: false }
+                ],
+                topic: "String title()"
+            },
+            {
+                id: 52,
+                text: "What will be printed?<div class='code-block'>s = \"a,b,c,d\"<br>parts = s.split(\",\")<br>print(len(parts))</div>",
+                options: [
+                    { text: "A) 1", correct: false },
+                    { text: "B) 4", correct: true },
+                    { text: "C) 7", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Split & Length"
+            },
+            {
+                id: 53,
+                text: "What is the output of this code?<div class='code-block'>text = \"Hello World\"<br>print(text.replace(\"World\", \"Python\"))</div>",
+                options: [
+                    { text: "A) Hello Python", correct: true },
+                    { text: "B) Hello World", correct: false },
+                    { text: "C) World Python", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "String replace()"
+            },
+            {
+                id: 54,
+                text: "What will be the output?<div class='code-block'>s = \"programming\"<br>print(s.startswith(\"pro\"))</div>",
+                options: [
+                    { text: "A) True", correct: true },
+                    { text: "B) False", correct: false },
+                    { text: "C) \"pro\"", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "String startswith()"
+            },
+            {
+                id: 55,
+                text: "What is the output of the following code?<div class='code-block'>chars = ['P', 'y', 't', 'h', 'o', 'n']<br>result = ''.join(chars)<br>print(result)</div>",
+                options: [
+                    { text: "A) ['P', 'y', 't', 'h', 'o', 'n']", correct: false },
+                    { text: "B) Python", correct: true },
+                    { text: "C) P y t h o n", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Join String"
+            },
+            {
+                id: 56,
+                text: "What is the output of the following code?<div class='code-block'>x = [1, 2, 3]<br>y = x.copy()<br>y.append(4)<br>print(x)</div>",
+                options: [
+                    { text: "A) [1, 2, 3]", correct: true },
+                    { text: "B) [1, 2, 3, 4]", correct: false },
+                    { text: "C) Error", correct: false },
+                    { text: "D) [4]", correct: false }
+                ],
+                topic: "List copy()"
+            },
+            {
+                id: 57,
+                text: "What will be printed?<div class='code-block'>def add(*args):<br>&nbsp;&nbsp;&nbsp;&nbsp;total = 0<br>&nbsp;&nbsp;&nbsp;&nbsp;for num in args:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total += num<br>&nbsp;&nbsp;&nbsp;&nbsp;return total<br><br>print(add(1, 2, 3, 4, 5))</div>",
+                options: [
+                    { text: "A) 5", correct: false },
+                    { text: "B) 15", correct: true },
+                    { text: "C) (1, 2, 3, 4, 5)", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "*args Sum"
+            },
+            {
+                id: 58,
+                text: "What is the output of this code?<div class='code-block'>numbers = [5, 2, 8, 1, 9]<br>print(sorted(numbers))</div>",
+                options: [
+                    { text: "A) [5, 2, 8, 1, 9]", correct: false },
+                    { text: "B) [1, 2, 5, 8, 9]", correct: true },
+                    { text: "C) [9, 8, 5, 2, 1]", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "sorted() Function"
+            },
+            {
+                id: 59,
+                text: "What will be the output?<div class='code-block'>my_set = {3, 1, 4, 1, 5, 9}<br>print(len(my_set))</div>",
+                options: [
+                    { text: "A) 6", correct: false },
+                    { text: "B) 5", correct: true },
+                    { text: "C) Error", correct: false },
+                    { text: "D) {3, 1, 4, 5, 9}", correct: false }
+                ],
+                topic: "Set Duplicates"
+            },
+            {
+                id: 60,
+                text: "What is the output of the following code?<div class='code-block'>d = {1: \"a\", 2: \"b\", 3: \"c\"}<br>print(list(d.values()))</div>",
+                options: [
+                    { text: "A) [1, 2, 3]", correct: false },
+                    { text: "B) ['a', 'b', 'c']", correct: true },
+                    { text: "C) [(1, 'a'), (2, 'b'), (3, 'c')]", correct: false },
+                    { text: "D) Error", correct: false }
+                ],
+                topic: "Dictionary values()"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        const totalQuestions = questions.length;
+        const passingPercentage = 70;
+        const passingScore = Math.ceil((totalQuestions * passingPercentage) / 100);
+
+        function startQuiz() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const question = questions[currentQuestionIndex];
+            const container = document.getElementById('questionsContainer');
+
+            let optionsHTML = '<div class="options">';
+            question.options.forEach((option, index) => {
+                const isChecked = userAnswers[question.id] === index ? 'checked' : '';
+                optionsHTML += `
+                    <div class="option ${isChecked ? 'selected' : ''}">
+                        <label>
+                            <input type="radio" name="option" value="${index}" ${isChecked}
+                                   onchange="selectAnswer(${question.id}, ${index})">
+                            ${option.text}
+                        </label>
+                    </div>
+                `;
+            });
+            optionsHTML += '</div>';
+
+            container.innerHTML = `
+                <div class="question-container active">
+                    <div class="question-number">Question ${currentQuestionIndex + 1} of ${totalQuestions}</div>
+                    <div class="question-text">${question.text}</div>
+                    ${optionsHTML}
+                </div>
+            `;
+
+            updateButtons();
+            updateProgress();
+        }
+
+        function selectAnswer(questionId, optionIndex) {
+            userAnswers[questionId] = optionIndex;
+
+            // Update visual selection
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            document.getElementById('answeredCount').textContent = answered;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+
+            const percentage = Math.round((answered / totalQuestions) * 100);
+            document.getElementById('progressFill').style.width = percentage + '%';
+
+            // Calculate and show score preview
+            let correct = 0;
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    if (q.options[userAnswers[q.id]].correct) {
+                        correct++;
+                    }
+                }
+            });
+
+            const scorePercentage = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+            document.getElementById('scorePreview').textContent = scorePercentage + '%';
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            prevBtn.disabled = currentQuestionIndex === 0;
+
+            if (currentQuestionIndex === totalQuestions - 1) {
+                nextBtn.textContent = 'Submit';
+            } else {
+                nextBtn.textContent = 'Next';
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultScreen').classList.add('show');
+
+            let correct = 0;
+            let incorrect = 0;
+
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    if (q.options[userAnswers[q.id]].correct) {
+                        correct++;
+                    } else {
+                        incorrect++;
+                    }
+                }
+            });
+
+            const unanswered = totalQuestions - correct - incorrect;
+            const totalAnswered = correct + incorrect;
+            const percentage = totalAnswered > 0 ? Math.round((correct / totalAnswered) * 100) : 0;
+            const passed = percentage >= passingPercentage;
+
+            // Store result in localStorage for dashboard
+            const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
+            results.push({
+                examId: 'python',
+                score: percentage,
+                correct: correct,
+                total: totalAnswered,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('quizResults', JSON.stringify(results));
+
+            document.getElementById('scoreDisplay').innerHTML = `${percentage}%`;
+            document.getElementById('scoreDisplay').className = `score-display ${passed ? 'pass' : 'fail'}`;
+
+            document.getElementById('resultStatus').innerHTML = passed
+                ? `<span class="pass">✓ PASSED</span>`
+                : `<span class="fail">✗ FAILED</span>`;
+            document.getElementById('resultStatus').className = `result-status ${passed ? 'pass' : 'fail'}`;
+
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('wrongCount').textContent = incorrect + unanswered;
+
+            // Answer Review
+            let reviewHTML = '';
+            questions.forEach(q => {
+                if (userAnswers[q.id] !== undefined) {
+                    const selectedIndex = userAnswers[q.id];
+                    const isCorrect = q.options[selectedIndex].correct;
+                    const userAnswer = q.options[selectedIndex].text;
+                    const correctAnswer = q.options.find(opt => opt.correct).text;
+
+                    reviewHTML += `
+                        <div class="answer-item ${isCorrect ? 'correct' : 'incorrect'}">
+                            <div class="answer-item-text">Q${q.id}: ${q.text.substring(0, 50)}...</div>
+                            <div class="answer-item-detail">
+                                Your answer: ${userAnswer}<br>
+                                ${!isCorrect ? `Correct answer: ${correctAnswer}` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            document.getElementById('answerReview').innerHTML = reviewHTML;
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
